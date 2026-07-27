@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Ôn thi Đại lý Bảo hiểm Nhân thọ</title>
+<style>
+  :root{
+    --maroon:#C5281C;
+    --maroon-dark:#8F1B12;
+    --maroon-light:#E15243;
+    --bg:#FBF3F1;
+    --card:#FFFFFF;
+    --ink:#241414;
+    --ink-soft:#6b5b58;
+    --border:#EADDDA;
+    --success:#1E7A46;
+    --success-bg:#E8F5EC;
+    --danger:#B3261E;
+    --danger-bg:#FCEBEA;
+    --lock:#B8AAA7;
+    --radius:16px;
+    --shadow: 0 4px 18px rgba(139,30,30,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background: var(--bg);
+    position:relative;
+  }
+  button{font-family:inherit;}
+
+  /* ================= REGISTRATION ================= */
+  .reg-page{ position:relative; min-height:100vh; overflow:hidden; }
+  .reg-bg{
+    position:fixed; inset:0; z-index:0;
+    background-size:cover; background-position:center 20%;
+    background-color:#8a1a12;
+  }
+  .reg-overlay{
+    position:fixed; inset:0; z-index:1;
+    background: linear-gradient(180deg, rgba(197,40,28,.42) 0%, rgba(197,40,28,.38) 45%, rgba(251,243,241,.97) 92%);
+  }
+  .reg-content{ position:relative; z-index:2; padding:38px 18px 30px; }
+  .reg-hero{ text-align:center; color:#fff; margin-bottom:24px; padding-top:6px; }
+  .reg-hero h1{ font-size:25px; font-weight:800; margin:0 0 8px; line-height:1.3; letter-spacing:.5px;
+    text-shadow:0 2px 10px rgba(0,0,0,.45);}
+  .reg-hero p{ font-size:14px; margin:0; font-style:italic; font-weight:600; text-shadow:0 2px 8px rgba(0,0,0,.45); }
+  .reg-card{
+    background:var(--card); border-radius:var(--radius); padding:24px 20px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.18);
+  }
+  .reg-title{ font-size:17px; font-weight:800; color:var(--maroon); margin:0 0 4px;}
+  .reg-sub{ font-size:12.5px; color:var(--ink-soft); margin:0 0 18px; line-height:1.5;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:var(--ink);}
+  .field .hint{font-size:11.5px; color:var(--ink-soft); margin-top:4px;}
+  input[type=text], select{
+    width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--border);
+    font-size:15px; background:#fff; color:var(--ink); font-family:inherit;
+  }
+  input:focus, select:focus{ outline:none; border-color:var(--maroon-light); }
+  .dob-row{ display:grid; grid-template-columns: 1fr 1.3fr 1fr; gap:8px; }
+  .dob-row select{ padding:12px 6px; font-size:13.5px; }
+  .dob-preview{ font-size:12.5px; color:var(--maroon); font-weight:700; margin-top:6px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:14px; border-radius:12px; border:none;
+    background: var(--maroon); color:#fff; font-size:15px; font-weight:700;
+    cursor:pointer; transition:transform .1s ease, background .15s ease;
+  }
+  .btn:active{ transform:scale(.98); }
+  .btn:disabled{ background:#d8c9c6; cursor:not-allowed; }
+  .btn.secondary{ background:#fff; color:var(--maroon); border:1.5px solid var(--maroon); }
+  .btn.danger-outline{ background:#fff; color:var(--danger); border:1.5px solid var(--danger); }
+  .error-msg{ color:var(--danger); font-size:12.5px; margin-top:6px; display:none;}
+
+  /* ================= MAIN HEADER / TABS ================= */
+  .topbar{
+    background: var(--maroon);
+    color:#fff;
+    padding:16px 18px 0;
+    position:sticky; top:0; z-index:20;
+    box-shadow: var(--shadow);
+  }
+  .topbar-toprow{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .student-name{ font-size:19px; font-weight:800; line-height:1.25; }
+  .app-title{ font-size:11.5px; opacity:.78; margin-top:3px; font-weight:600; letter-spacing:.3px;}
+  .export-btn{ background:rgba(255,255,255,.16); border:none; color:#fff; width:34px; height:34px; border-radius:50%;
+    font-size:15px; cursor:pointer; flex-shrink:0; }
+  .logout-btn{ background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.4); color:#fff;
+    padding:8px 16px; border-radius:22px; font-size:12.5px; font-weight:800; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; gap:6px; letter-spacing:.3px; }
+  .tabbar{ display:flex; gap:6px; margin-top:14px; }
+  .tab{ flex:1; text-align:center; padding:10px 4px; font-size:13px; font-weight:700;
+    color:rgba(255,255,255,.7); border-bottom:3px solid transparent; cursor:pointer;}
+  .tab.active{ color:#fff; border-bottom-color:#fff; }
+
+  .screen{ padding:16px 18px 90px; animation: fadeIn .25s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .stat-strip{ display:flex; gap:8px; margin-bottom:16px; }
+  .stat-chip{ flex:1; background:var(--card); border-radius:12px; padding:10px 6px; text-align:center; box-shadow:var(--shadow); }
+  .stat-chip .n{ font-size:16px; font-weight:800; color:var(--maroon); }
+  .stat-chip .l{ font-size:10px; color:var(--ink-soft); margin-top:1px; }
+
+  .section-title{ font-size:12.5px; font-weight:700; color:var(--maroon); text-transform:uppercase;
+    letter-spacing:.5px; margin:4px 0 10px 2px;}
+
+  /* ================= ITEM CARDS (chủ đề / đề thi thử) ================= */
+  .topic-card{
+    background:var(--card); border-radius:14px; padding:14px 16px; margin-bottom:11px;
+    box-shadow:var(--shadow); display:flex; align-items:center; gap:13px; cursor:pointer;
+    border:1.5px solid transparent;
+  }
+  .topic-card.locked, .topic-card.empty{ opacity:.55; cursor:not-allowed; }
+  .topic-card.passed{ border-color:var(--success); }
+  .topic-badge{
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px; flex-shrink:0; color:#fff; background:var(--maroon);
+  }
+  .topic-card.locked .topic-badge, .topic-card.empty .topic-badge{ background:var(--lock); }
+  .topic-card.passed .topic-badge{ background:var(--success); }
+  .topic-info{flex:1; min-width:0;}
+  .topic-info .name{ font-size:14px; font-weight:700; margin:0 0 4px; }
+  .topic-info .meta1{ font-size:11.5px; color:var(--ink-soft); margin-bottom:3px;}
+  .topic-info .meta2{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:11px; color:var(--ink-soft); }
+  .topic-info .meta2 b{ color:var(--ink); }
+  .topic-status{ font-size:17px; flex-shrink:0; }
+
+  /* ================= QUIZ TAKING (swipe) ================= */
+  .quiz-page{ position:fixed; inset:0; z-index:50; background:var(--bg); display:flex; flex-direction:column; }
+  .quiz-header{ background:var(--maroon); color:#fff; padding:12px 14px; flex-shrink:0; }
+  .quiz-header-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .exit-btn{ background:rgba(255,255,255,.16); border:none; color:#fff; padding:7px 12px; border-radius:20px;
+    font-size:12.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;}
+  .quiz-title{ font-size:13.5px; font-weight:700; flex:1; text-align:center; padding:0 6px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .timer{ font-weight:800; font-size:14px; background:rgba(255,255,255,.16); padding:6px 11px; border-radius:20px; flex-shrink:0;}
+  .quiz-progress-track{ height:5px; background:rgba(255,255,255,.25); border-radius:6px; margin-top:10px; overflow:hidden;}
+  .quiz-progress-fill{ height:100%; background:#fff; border-radius:6px; transition:width .2s ease;}
+
+  .quiz-scroll{ flex:1; overflow-y:auto; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; }
+  .qslide{ scroll-snap-align:start; min-height:100%; display:flex; flex-direction:column; justify-content:center;
+    padding:22px 20px 30px; }
+  .qslide .qnum{ font-size:12px; font-weight:700; color:var(--maroon-light); margin-bottom:8px;}
+  .qcard{ background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
+  .qtext{ font-size:16px; font-weight:700; line-height:1.5; margin:0 0 18px;}
+  .opt{
+    display:flex; align-items:flex-start; gap:12px; padding:13px 14px; border:1.5px solid var(--border);
+    border-radius:12px; margin-bottom:10px; cursor:pointer; font-size:14.5px; line-height:1.5;
+  }
+  .opt.selected{ border-color:var(--maroon-light); background:#FDF1EF; }
+  .opt .dot{ width:20px; height:20px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; margin-top:1px;
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff;}
+  .opt.selected .dot{ border-color:var(--maroon-light); background:var(--maroon-light); }
+  .swipe-hint{ text-align:center; font-size:11.5px; color:var(--ink-soft); margin-top:14px; }
+
+  .submit-slide{ align-items:center; text-align:center; }
+  .submit-slide .icon{ font-size:44px; margin-bottom:10px; }
+  .submit-slide h3{ font-size:17px; margin:0 0 6px; }
+  .submit-slide p{ font-size:13px; color:var(--ink-soft); margin:0 0 20px; }
+
+  .quiz-footer{ flex-shrink:0; background:#fff; border-top:1px solid var(--border); padding:10px 16px;
+    display:flex; align-items:center; gap:12px; }
+  .answered-count{ font-size:12px; color:var(--ink-soft); font-weight:600; white-space:nowrap; }
+  .quiz-footer .btn{ padding:11px; font-size:14px; }
+
+  /* ================= MODAL ================= */
+  .modal-backdrop{ position:fixed; inset:0; background:rgba(20,8,8,.55); z-index:200; display:flex;
+    align-items:center; justify-content:center; padding:24px; animation: fadeIn .15s ease;}
+  .modal-box{ background:#fff; border-radius:16px; padding:22px 20px; max-width:340px; width:100%; text-align:center;}
+  .modal-box .micon{ font-size:34px; margin-bottom:8px;}
+  .modal-box h3{ font-size:16.5px; margin:0 0 8px;}
+  .modal-box p{ font-size:13px; color:var(--ink-soft); margin:0 0 20px; line-height:1.5;}
+  .modal-actions{ display:flex; gap:10px; }
+  .modal-actions .btn{ flex:1; }
+
+  /* ================= RESULT ================= */
+  .result-hero{ text-align:center; padding:26px 10px 6px;}
+  .result-ring{ width:112px; height:112px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center;
+    justify-content:center; font-size:26px; font-weight:800; color:#fff; }
+  .result-ring.pass{ background: conic-gradient(var(--success) 0deg, var(--success) calc(var(--pct)*3.6deg), #ddd calc(var(--pct)*3.6deg)); }
+  .result-ring.fail{ background: conic-gradient(var(--danger) 0deg, var(--danger) calc(var(--pct)*3.6deg), #ddd calc(var(--pct)*3.6deg)); }
+  .result-ring .inner{ width:90px; height:90px; border-radius:50%; background:#fff; display:flex; align-items:center;
+    justify-content:center; color:var(--ink); }
+  .result-title{ font-size:18px; font-weight:800; margin:6px 0 2px;}
+  .result-sub{ font-size:13px; color:var(--ink-soft); margin-bottom:18px; }
+  .review-item{ background:var(--card); border-radius:12px; padding:14px; margin-bottom:10px; box-shadow:var(--shadow);}
+  .review-q{ font-size:13.5px; font-weight:700; margin:0 0 8px;}
+  .review-tag{ display:inline-block; font-size:11px; font-weight:800; padding:2px 8px; border-radius:20px; margin-bottom:8px;}
+  .review-tag.ok{ background:var(--success-bg); color:var(--success); }
+  .review-tag.bad{ background:var(--danger-bg); color:var(--danger); }
+  .explain-box{ margin-top:10px; background:#FBF6E9; border-left:4px solid #D9A62E; padding:10px 12px;
+    border-radius:8px; font-size:12.5px; line-height:1.6; color:#5a4a1c;}
+  .explain-box b{ color:#8a6a10; }
+
+  .warn-banner{
+    position:fixed; top:0; left:0; right:0; z-index:999; background:var(--danger); color:#fff;
+    text-align:center; font-size:13px; font-weight:700; padding:10px 16px;
+    animation: slideDown .25s ease;
+  }
+  @keyframes slideDown{ from{transform:translateY(-100%);} to{transform:translateY(0);} }
+  .empty{ text-align:center; padding:40px 20px; color:var(--ink-soft); font-size:13.5px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ==========================================================================
+// NGÂN HÀNG CÂU HỎI - 3 CHỦ ĐỀ ĐẦU TIÊN
+// Căn cứ pháp lý: Luật Kinh doanh bảo hiểm 2022 (Luật số 08/2022/QH15),
+// Nghị định 46/2023/NĐ-CP, Thông tư 67/2023/TT-BTC
+// ==========================================================================
+
+const TOPICS_DATA = [
+  {
+    id: 1,
+    name: "Nguồn gốc & Vai trò bảo hiểm",
+    questions: [
+      {
+        q: "Rủi ro ngẫu nhiên là gì?",
+        options: ["Bất ngờ", "Không lường trước được về không gian, thời gian, cũng như mức độ nghiêm trọng", "Cả A và B đều đúng"],
+        answer: 2,
+        explain: "Rủi ro ngẫu nhiên (fortuitous risk) là rủi ro mang tính bất ngờ, không thể dự đoán chính xác về thời điểm, địa điểm và mức độ nghiêm trọng khi xảy ra. Đây là điều kiện tiên quyết để một rủi ro được coi là 'có thể được bảo hiểm' — nếu sự kiện chắc chắn xảy ra hoặc do cố ý gây ra thì không còn là rủi ro ngẫu nhiên nữa."
+      },
+      {
+        q: "Bảo hiểm là phương pháp quản lý rủi ro nào sau đây:",
+        options: ["Giữ lại rủi ro.", "Né tránh rủi ro.", "Kiểm soát rủi ro.", "Chuyển giao rủi ro"],
+        answer: 3,
+        explain: "Trong 4 nhóm phương pháp quản lý rủi ro (né tránh, chấp nhận/giữ lại, kiểm soát/giảm thiểu, chuyển giao), bảo hiểm thuộc nhóm chuyển giao rủi ro: người tham gia bảo hiểm chuyển gánh nặng tài chính của rủi ro sang doanh nghiệp bảo hiểm thông qua việc đóng phí bảo hiểm."
+      },
+      {
+        q: "Chọn phương án đúng nhất về phương pháp quản lý rủi ro:",
+        options: ["Né tránh rủi ro", "Chấp nhận rủi ro", "Kiểm soát rủi ro", "Chuyển giao rủi ro", "A,B,C,D đúng"],
+        answer: 4,
+        explain: "Lý thuyết quản trị rủi ro chia thành 4 nhóm phương pháp cơ bản: né tránh (avoidance), chấp nhận/giữ lại (retention), kiểm soát/giảm thiểu (control), và chuyển giao (transfer) — bảo hiểm là một hình thức chuyển giao rủi ro phổ biến nhất."
+      },
+      {
+        q: "Tiêu chí nào sau đây là tiêu chí đánh giá rủi ro:",
+        options: ["Mức độ rủi ro và kiểm soát rủi ro", "Mức độ rủi ro và nguy cơ rủi ro", "Nguy cơ rủi ro và kiểm soát rủi ro", "A, B, C đúng"],
+        answer: 1,
+        explain: "Đánh giá rủi ro trong bảo hiểm thường dựa trên hai yếu tố: mức độ rủi ro (mức độ nghiêm trọng/tần suất tổn thất có thể xảy ra) và nguy cơ rủi ro (các yếu tố làm tăng khả năng hoặc mức độ tổn thất, ví dụ tình trạng sức khỏe, nghề nghiệp, môi trường sống)."
+      },
+      {
+        q: "Rủi ro có thể được bảo hiểm và được DN bảo hiểm chấp nhận bảo hiểm là rủi ro được bảo hiểm:",
+        options: ["Đúng", "Sai"],
+        answer: 0,
+        explain: "Đây là định nghĩa chuẩn: một rủi ro chỉ trở thành 'rủi ro được bảo hiểm' khi vừa thỏa mãn các điều kiện có thể được bảo hiểm (ngẫu nhiên, định lượng được, có số đông, không trái đạo đức), vừa được doanh nghiệp bảo hiểm chấp thuận bảo hiểm trong hợp đồng cụ thể."
+      },
+      {
+        q: "Phát biểu nào sau đây là đúng nhất về rủi ro loại trừ:",
+        options: ["Là rủi ro không thể được bảo hiểm", "Là rủi có thể được bảo hiểm nhưng doanh nghiệp bảo hiểm không chấp nhận bảo hiểm", "A, B đúng", "A, B sai"],
+        answer: 2,
+        explain: "Rủi ro loại trừ có thể rơi vào hai trường hợp: (1) bản chất không đáp ứng điều kiện để được bảo hiểm (ví dụ không định lượng được, không ngẫu nhiên), hoặc (2) về nguyên tắc có thể bảo hiểm được nhưng doanh nghiệp bảo hiểm chủ động loại trừ trong quy tắc, điều khoản của sản phẩm (ví dụ tự tử trong 2 năm đầu, chiến tranh...)."
+      },
+      {
+        q: "Rủi ro được coi là rủi ro có thể được bảo hiểm khi đáp ứng các điều kiện sau:",
+        options: ["Tổn thất phải ngẫu nhiên, bất ngờ.", "Phải đo được, định lượng được về tài chính.", "Phải có số đông.", "Không trái với chuẩn mực đạo đức xã hội.", "A, B, C, D đúng"],
+        answer: 4,
+        explain: "4 điều kiện kinh điển để một rủi ro 'có thể được bảo hiểm': tổn thất ngẫu nhiên/bất ngờ, định lượng được bằng tiền, có số đông đối tượng tương tự cùng tham gia, và không trái đạo đức, pháp luật xã hội."
+      },
+      {
+        q: "Quy luật số đông được hiểu là (chọn phương án đúng nhất):",
+        options: ["Số lượng đủ lớn các đối tượng được bảo hiểm nhằm bù đắp cho số ít đối tượng đó bị tổn thất trong thời hạn bảo hiểm", "Các đối tượng bảo hiểm phải đồng nhất", "Các đối tượng bảo hiểm phải độc lập với nhau", "A, C đúng", "A, B, C đúng"],
+        answer: 4,
+        explain: "Quy luật số đông (law of large numbers) là nền tảng toán học của bảo hiểm: cần một số lượng đủ lớn các đối tượng tương đồng về bản chất rủi ro (đồng nhất), độc lập với nhau về khả năng xảy ra tổn thất, để phí bảo hiểm thu từ số đông người tham gia đủ bù đắp cho số ít người thực sự gặp rủi ro."
+      },
+      {
+        q: "Vai trò xã hội của bảo hiểm là:",
+        options: ["Góp phần đảm bảo an toàn cho nền kinh tế - xã hội.", "Tạo thêm việc làm cho xã hội.", "Tạo nếp sống tiết kiệm và mang đến trạng thái an toàn về mặt tinh thần cho xã hội.", "A, B, C đúng."],
+        answer: 3,
+        explain: "Bảo hiểm không chỉ có vai trò kinh tế mà còn mang vai trò xã hội rộng hơn: ổn định an sinh xã hội, tạo công ăn việc làm cho hàng vạn lao động (đại lý, chuyên viên...), và hình thành thói quen tiết kiệm, phòng ngừa rủi ro trong cộng đồng."
+      },
+      {
+        q: "Phát biểu nào dưới đây không đúng khi nói về vai trò kinh tế của bảo hiểm:",
+        options: ["Góp phần ổn định tài chính của tổ chức, các nhân tham gia bảo hiểm", "Đóng vai trò trung gian trong việc huy động vốn cho nền kinh tế quốc dân", "Góp phần ổn định ngân sách quốc gia", "Cung cấp tiền vốn cho người gặp rủi ro thay cho vay ngân hàng"],
+        answer: 3,
+        explain: "Bảo hiểm chi trả quyền lợi/bồi thường theo đúng thỏa thuận hợp đồng khi có sự kiện bảo hiểm xảy ra — đây không phải là hoạt động 'cấp vốn vay' thay thế cho ngân hàng. Bản chất và mục đích của hai công cụ tài chính này khác nhau, nên đây là phát biểu SAI về vai trò kinh tế của bảo hiểm."
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: "Thuật ngữ bảo hiểm",
+    questions: [
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, việc giao kết hợp đồng bảo hiểm với doanh nghiệp bảo hiểm và đóng phí bảo hiểm được thực hiện bởi:",
+        options: ["Bên mua bảo hiểm", "Môi giới bảo hiểm", "Đại lý bảo hiểm", "B, C đúng"],
+        answer: 0,
+        explain: "Theo khoản 24 Điều 4 Luật Kinh doanh bảo hiểm 2022, bên mua bảo hiểm là tổ chức, cá nhân giao kết hợp đồng bảo hiểm với doanh nghiệp bảo hiểm và đóng phí bảo hiểm. Đại lý và môi giới chỉ là trung gian hỗ trợ giao kết, không phải chủ thể trực tiếp đóng phí."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây SAI:",
+        options: ["Bên mua bảo hiểm là tổ chức, cá nhân giao kết hợp đồng bảo hiểm với doanh nghiệp bảo hiểm và đóng phí bảo hiểm.", "Bên mua bảo hiểm phải có quyền lợi có thể được bảo hiểm phù hợp với từng loại hợp đồng bảo hiểm theo quy định của Luật Kinh doanh bảo hiểm.", "Bên mua bảo hiểm là cá nhân được người thụ hưởng chỉ định để đóng phí bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm.", "Bên mua bảo hiểm có quyền lựa chọn doanh nghiệp bảo hiểm để giao kết hợp đồng bảo hiểm."],
+        answer: 2,
+        explain: "Bên mua bảo hiểm là chủ thể tự mình giao kết hợp đồng và đóng phí (Điều 4 Luật KDBH 2022), không phải là người 'được người thụ hưởng chỉ định' — thứ tự chỉ định trong bảo hiểm là ngược lại: chính bên mua bảo hiểm (hoặc người được bảo hiểm) mới là người có quyền chỉ định người thụ hưởng, không phải chiều ngược lại."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, bên nhận phí bảo hiểm để bồi thường, trả tiền bảo hiểm khi xảy ra sự kiện bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm là:",
+        options: ["Doanh nghiệp môi giới bảo hiểm.", "Đại lý bảo hiểm.", "Doanh nghiệp bảo hiểm.", "A, B, C đúng"],
+        answer: 2,
+        explain: "Theo Điều 4 Luật KDBH 2022, chỉ doanh nghiệp bảo hiểm mới là bên nhận phí và có nghĩa vụ bồi thường/trả tiền bảo hiểm. Đại lý và môi giới bảo hiểm chỉ đóng vai trò trung gian, không trực tiếp gánh chịu nghĩa vụ tài chính này."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, chọn phương án SAI về người thụ hưởng:",
+        options: ["Người thụ hưởng là tổ chức, cá nhân được bên mua bảo hiểm chỉ định để nhận tiền bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm", "Người thụ hưởng là tổ chức, cá nhân được người được bảo hiểm chỉ định để nhận tiện bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm", "Người thụ hưởng là tổ chức, cá nhân được doanh nghiệp bảo hiểm chỉ định để nhận tiền bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm", "A, B đúng"],
+        answer: 2,
+        explain: "Theo khoản 26 Điều 4 Luật KDBH 2022, người thụ hưởng do bên mua bảo hiểm hoặc người được bảo hiểm chỉ định — doanh nghiệp bảo hiểm không có quyền chỉ định người thụ hưởng, doanh nghiệp bảo hiểm chỉ là bên chi trả theo chỉ định đó."
+      },
+      {
+        q: "Chọn phương án đúng nhất: Theo pháp luật Việt Nam về kinh doanh bảo hiểm nhân thọ, người thụ hưởng của hợp đồng bảo hiểm nhân thọ là:",
+        options: ["Cá nhân từ đủ 18 tuổi trở lên có năng lực hành vi dân sự đầy đủ tại thời điểm giao kết hợp đồng bảo hiểm.", "Người được bên mua bảo hiểm chỉ định để nhận tiền bảo hiểm theo thỏa thuận tại hợp đồng bảo hiểm cá nhân.", "Người được người được bảo hiểm trong hợp đồng bảo hiểm nhóm chỉ định để nhận tiền bảo hiểm theo thỏa thuận tại hợp đồng bảo hiểm nhóm.", "B, C đúng.", "A, B, C đúng."],
+        answer: 3,
+        explain: "Người thụ hưởng không bị giới hạn phải từ đủ 18 tuổi. Theo Điều 4 và Điều 41 Luật KDBH 2022, với hợp đồng cá nhân thì bên mua bảo hiểm chỉ định người thụ hưởng; với hợp đồng bảo hiểm nhóm thì chính người được bảo hiểm trong nhóm đó là người có quyền chỉ định."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào dưới đây sai:",
+        options: ["Bên mua bảo hiểm là tổ chức, cá nhân giao kết hợp đồng bảo hiểm với doanh nghiệp bảo hiểm và đóng phí bảo hiểm", "Người thụ hưởng là tổ chức, cá nhân được bên mua bảo hiểm hoặc người được bảo hiểm chỉ định để nhận tiền bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm", "Bên mua bảo hiểm và người được bảo hiểm không thể là người thụ hưởng", "Người được bảo hiểm là tổ chức, các nhân có tài sản, trách nhiệm dân sự, sức khỏe, tính mạng, nghĩa vụ hoặc lợi ích kinh tế được bảo hiểm theo hợp đồng bảo hiểm"],
+        answer: 2,
+        explain: "Trên thực tế, bên mua bảo hiểm hoặc người được bảo hiểm hoàn toàn có thể đồng thời là người thụ hưởng của chính hợp đồng đó (ví dụ tự mua bảo hiểm và tự chỉ định mình là người nhận quyền lợi khi đáo hạn) — nên phát biểu 'không thể là người thụ hưởng' là SAI."
+      },
+      {
+        q: "Trong hợp đồng bảo hiểm nhân thọ, đối tượng nào sau đây không được thay đổi trong khi hợp đồng có hiệu lực:",
+        options: ["Người được bảo hiểm.", "Bên mua bảo hiểm.", "Người thụ hưởng.", "A,B, C sai."],
+        answer: 0,
+        explain: "Người được bảo hiểm gắn liền với đối tượng bảo hiểm là tính mạng, sức khỏe của một cá nhân cụ thể — đây chính là cơ sở để xác định phí bảo hiểm và quyền lợi có thể được bảo hiểm ngay từ đầu, nên không thể thay đổi trong suốt thời hạn hợp đồng. Ngược lại, bên mua bảo hiểm (qua chuyển giao hợp đồng — Điều 28) và người thụ hưởng (Điều 41) đều có thể được thay đổi theo thỏa thuận."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, chọn phương án đúng khi bên mua bảo hiểm giao kết hợp đồng bảo hiểm nhân thọ cho trường hợp chết của người khác:",
+        options: ["Phải được người đó đồng ý bằng văn bản, trong đó ghi rõ số tiền bảo hiểm và người thụ hưởng", "Không cần được người đó đồng ý bằng văn bản"],
+        answer: 0,
+        explain: "Theo Điều 39 Luật KDBH 2022, khi bên mua bảo hiểm giao kết hợp đồng bảo hiểm nhân thọ hoặc bảo hiểm sức khỏe cho trường hợp chết của người khác, bắt buộc phải được người đó đồng ý bằng văn bản, trong đó ghi rõ số tiền bảo hiểm và người thụ hưởng — quy định này nhằm ngăn ngừa rủi ro đạo đức (trục lợi bảo hiểm)."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, chọn phương án đúng nhất về sự kiện bảo hiểm:",
+        options: ["Là sự kiện chủ quan do các bền thỏa thuận mà khi sự kiện đó xảy ra thì doanh nghiệp bảo hiểm phải trả tiền bảo hiểm cho người thụ hưởng hoặc bồi thường cho người được bảo hiểm", "Là sự kiện khách quan do các bên thỏa thuận hoặc pháp luật quy định mà khi sự kiện đó xảy ra thì doanh nghiệp bảo hiểm phải bởi thường, trả tiền bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm", "Là sự kiện khách quan do pháp luật quy định mà khi sự kiện đó xảy ra thì doanh nghiệp bảo hiểm phải trả tiền bảo hiểm cho người thụ hưởng hoặc bồi thường cho người được bảo hiểm", "Là sự kiện chủ quan do pháp luật quy định mà khi sự kiện đó xảy ra thì doanh nghiệp bảo hiểm phải trả tiền bảo hiểm cho người thụ hưởng hoặc bồi thường cho người được bảo hiểm"],
+        answer: 1,
+        explain: "Theo Điều 4 Luật KDBH 2022, sự kiện bảo hiểm phải mang tính khách quan (không phải do một bên chủ ý tạo ra), có thể phát sinh từ thỏa thuận của các bên trong hợp đồng hoặc do pháp luật quy định — chứ không chỉ giới hạn ở một trong hai nguồn này."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, phí bảo hiểm là:",
+        options: ["Khoản tiền mà doanh nghiệp bảo hiểm sẽ trả lại cho người được bảo hiểm khi rủi ro không xảy ra", "Khoản tiền mà doanh nghiệp bảo hiểm sẽ trả lại cho người được bảo hiểm khi tổn thất thấp hơn thỏa thuận tại hợp đồng bảo hiểm", "Khoản tiền mà bên mua bảo hiểm phải đóng cho doanh nghiệp bảo hiểm theo quy định của pháp luật hoặc do các bên thỏa thuận trong hợp đồng bảo hiểm", "A, C đúng", "B, C đúng"],
+        answer: 2,
+        explain: "Theo Điều 4 Luật KDBH 2022, phí bảo hiểm là khoản tiền bên mua bảo hiểm phải đóng cho doanh nghiệp bảo hiểm, mức phí do pháp luật quy định hoặc do các bên thỏa thuận trong hợp đồng — đây là nghĩa vụ của bên mua, hoàn toàn khác với khoản tiền bảo hiểm mà doanh nghiệp chi trả khi có sự kiện bảo hiểm."
+      },
+      {
+        q: "Bên mua bảo hiểm có thể thỏa thuận thanh toán phí bảo hiểm cho doanh nghiệp bảo hiểm theo quy định và phương thức sau:",
+        options: ["Thanh toán một lần.", "Thanh toán làm nhiều kỳ.", "Thời hạn thanh toán phí bảo hiểm không được vượt quá thời hạn bảo hiểm.", "A, B, C đúng."],
+        answer: 3,
+        explain: "Luật KDBH 2022 và các văn bản hướng dẫn (Nghị định 46/2023/NĐ-CP) cho phép các bên thỏa thuận linh hoạt phương thức đóng phí (một lần hoặc định kỳ nhiều lần), miễn là thời hạn đóng phí không vượt quá thời hạn bảo hiểm đã thỏa thuận trong hợp đồng."
+      },
+      {
+        q: "Trong hợp đồng bảo hiểm nhân thọ, yếu tố nào dưới đây của người được bảo hiểm ảnh hưởng đến phí bảo hiểm",
+        options: ["Tuổi", "Giới tính", "Nghề nghiệp", "A, B, C đúng"],
+        answer: 3,
+        explain: "Phí bảo hiểm nhân thọ được tính toán dựa trên bảng tỷ lệ tử vong/rủi ro, trong đó tuổi, giới tính và nghề nghiệp của người được bảo hiểm là các yếu tố cốt lõi ảnh hưởng trực tiếp đến xác suất xảy ra rủi ro, từ đó ảnh hưởng đến mức phí phải đóng."
+      },
+      {
+        q: "Chọn phương án đúng nhất về SỐ TIỀN BẢO HIỂM trong bảo hiểm sức khỏe:",
+        options: ["Số tiền mà doanh nghiệp bảo hiểm phải trả cho người được bảo hiểm khi kết thúc hợp đồng bảo hiểm.", "Số tiền mà doanh nghiệp bảo hiểm phải trả cho người được bảo hiểm trong mỗi rủi ro được bảo hiểm hoặc trong cả thời hạn bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm.", "Số tiền mà doanh nghiệp bảo hiểm trả cho người được bảo hiểm trong mọi rủi ro"],
+        answer: 1,
+        explain: "Số tiền bảo hiểm (Điều 4, Điều 45 Luật KDBH 2022) là mức giới hạn trách nhiệm chi trả của doanh nghiệp bảo hiểm, được xác định theo thỏa thuận trong hợp đồng — có thể áp dụng cho mỗi lần xảy ra rủi ro (ví dụ theo từng lần nằm viện) hoặc cho cả thời hạn bảo hiểm (tổng mức trách nhiệm tối đa)."
+      },
+      {
+        q: "Chọn đáp án đúng về tuổi bảo hiểm:",
+        options: ["Là tuổi của người được bảo hiểm tính theo ngày sinh nhật gần nhất TRƯỚC ngày có hiệu lực hợp đồng bảo hiểm hoặc ngày kỷ niệm hợp đồng trong các năm hợp đồng tiếp theo", "Là tuổi của người được bảo hiểm tính theo ngày sinh nhật gần nhất SAU ngày có hiệu lực hợp đồng bảo hiểm hoặc ngày kỷ niệm hợp đồng trong các năm hợp đồng tiếp theo", "A, B sai"],
+        answer: 0,
+        explain: "Đây là quy ước kỹ thuật phổ biến trong bảo hiểm nhân thọ (theo quy tắc, điều khoản sản phẩm được phê chuẩn theo Luật KDBH 2022 và Thông tư 67/2023/TT-BTC): tuổi bảo hiểm được tính theo sinh nhật gần nhất TRƯỚC ngày hiệu lực hợp đồng hoặc ngày kỷ niệm hợp đồng, dùng làm căn cứ tính phí — khác với tuổi thực tế theo ngày sinh."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây đúng về điều khoản loại trừ trách nhiệm bảo hiểm:",
+        options: ["Điều khoản loại trừ trách nhiệm bảo hiểm quy định các trường hợp doanh nghiệp bảo hiểm, chi nhánh doanh nghiệp bảo hiểm phi nhân thọ nước ngoài không phải bồi thường, trả tiền bảo hiểm.", "Điều khoản loại trừ trách nhiệm bảo hiểm quy định trường hợp doanh nghiệp bảo hiểm không phải trả tiền cho người thứ 3 khi người được bảo hiểm gây thiệt hại cho người thứ 3.", "Điều khoản loại trừ trách nhiệm bảo hiểm được quy định theo thông lệ quốc tế, không cần có trong hợp đồng bảo hiểm.", "A, B đúng"],
+        answer: 0,
+        explain: "Theo Điều 4 và Điều 19 Luật KDBH 2022, điều khoản loại trừ trách nhiệm bảo hiểm quy định các trường hợp cụ thể mà doanh nghiệp bảo hiểm không phải bồi thường/trả tiền bảo hiểm — điều khoản này bắt buộc phải được quy định rõ ràng trong hợp đồng và doanh nghiệp có nghĩa vụ giải thích cho bên mua bảo hiểm, không thể áp dụng ngầm định theo 'thông lệ quốc tế'."
+      },
+      {
+        q: "Chọn phương án đúng về cách thức quy định về loại trừ bảo hiểm:",
+        options: ["Loại trừ bảo hiểm được tự động thực hiện theo tập quán quốc tế.", "Loại trừ bảo hiểm được áp dụng theo quy tắc, điều khoản bảo hiểm do Hiệp hội bảo hiểm Việt Nam ban hành.", "Loại trừ bảo hiểm được căn cứ theo các điều kiện, điều khoản quy định trong Quy tắc bảo hiểm và các điều khoản sửa đổi, bổ sung (nếu có) kèm theo hợp đồng bảo hiểm.", "A, B, C đúng."],
+        answer: 2,
+        explain: "Nội dung loại trừ bảo hiểm phải căn cứ vào chính Quy tắc, điều khoản bảo hiểm (đã được Bộ Tài chính phê chuẩn theo Luật KDBH 2022 và Thông tư 67/2023/TT-BTC) đính kèm hợp đồng — không phải do tập quán quốc tế tự động áp dụng, cũng không do Hiệp hội bảo hiểm ban hành áp đặt chung."
+      },
+      {
+        q: "Trường hợp các doanh nghiệp bảo hiểm cùng thống nhất giao kết với bên mua bảo hiểm trên một hợp đồng bảo hiểm, trong đó doanh nghiệp bảo hiểm nhận phí bảo hiểm và bồi thường, trả tiền theo tỷ lệ đã thỏa thuận trong hợp đồng bảo hiểm được gọi là:",
+        options: ["Sản phẩm bảo hiểm", "Đồng bảo hiểm", "Tính toán phí bảo hiểm", "Hoạt động tư vấn"],
+        answer: 1,
+        explain: "Đây chính là khái niệm đồng bảo hiểm (Điều 4 Luật KDBH 2022) — nhiều doanh nghiệp bảo hiểm cùng nhận bảo hiểm cho một đối tượng trên một hợp đồng duy nhất, mỗi doanh nghiệp chịu trách nhiệm bồi thường theo đúng tỷ lệ đã thỏa thuận, khác với 'bảo hiểm trùng' (nhiều hợp đồng độc lập)."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, phương án đúng nhất cho trường hợp đồng bảo hiểm cho một đối tượng bảo hiểm, hợp đồng bảo hiểm phải có thông tin nào sau đây:",
+        options: ["Tên doanh nghiệp bảo hiểm đứng đầu", "Tỷ lệ đồng bảo hiểm của từng doanh nghiệp bảo hiểm", "Tỷ lệ phân chia trách nhiệm bồi thường trường hợp xảy ra sự kiện bảo hiểm", "A, B đúng", "A, B, C đúng"],
+        answer: 3,
+        explain: "Hợp đồng đồng bảo hiểm cần nêu rõ doanh nghiệp bảo hiểm đứng đầu (chịu trách nhiệm đầu mối) và tỷ lệ đồng bảo hiểm của từng doanh nghiệp tham gia — đây là hai nội dung cốt lõi để xác định trách nhiệm của mỗi bên khi phát sinh sự kiện bảo hiểm."
+      },
+      {
+        q: "Chọn đáp án đúng: Bảo tức là",
+        options: ["Khoản lãi chia của doanh nghiệp bảo hiểm cho các chủ hợp đồng bảo hiểm tham gia chia lãi trong trường hợp việc kinh doanh sản phẩm bảo hiểm mang lại lợi nhuận", "Số tiền bảo hiểm doanh nghiệp bảo hiểm chi trả trong trường hợp xảy ra sự kiện bảo hiểm", "Tổng số phí bảo hiểm doanh nghiệp bảo hiểm hoàn lại cho bên mua bảo hiểm trong trường hợp xảy ra sự kiện bảo hiểm", "A, B, C đúng"],
+        answer: 0,
+        explain: "Bảo tức (dividend) là khoản lãi chia cho chủ hợp đồng bảo hiểm nhân thọ có tham gia chia lãi, phát sinh khi kết quả kinh doanh sản phẩm có lợi nhuận — quy định chi tiết về cách xác định và chia bảo tức được nêu tại Thông tư 67/2023/TT-BTC. Đây hoàn toàn khác với số tiền bảo hiểm (quyền lợi cố định theo hợp đồng) hay phí bảo hiểm hoàn lại."
+      },
+      {
+        q: "Phát biểu nào sau đây là đúng đối với sản phẩm bảo hiểm nhân thọ có tham gia chia lãi:",
+        options: ["Khi tham gia gia sản phẩm bảo hiểm nhân thọ có tham gia chia lãi, chủ hợp đồng bảo hiểm nhân được không thấp hơn 70% tổng số lãi thu được", "Lãi chia cho chủ hợp đồng có thể được thực hiện dưới hình thức trả tiền mặt cho chủ hợp đồng, trả bảo tức tích lũy hoặc gia tăng số tiền bảo hiểm", "Khi tham gia sản phẩm bảo hiểm nhân thọ có tham gia chia lãi, chủ hợp đồng bảo hiểm nhận được không thấp hơn 80% tổng số tiền thu được", "A và B đúng"],
+        answer: 3,
+        explain: "Theo quy định hướng dẫn tại Thông tư 67/2023/TT-BTC về sản phẩm bảo hiểm nhân thọ có tham gia chia lãi, chủ hợp đồng được đảm bảo tỷ lệ chia lãi tối thiểu theo quy định (không thấp hơn 70% tổng số lãi thu được), và hình thức chi trả có thể linh hoạt: tiền mặt, bảo tức tích lũy, hoặc dùng để gia tăng số tiền bảo hiểm."
+      }
+    ]
+  },
+  {
+    id: 3,
+    name: "Nguyên tắc bảo hiểm",
+    questions: [
+      {
+        q: "Theo Luật kinh doanh bảo hiểm, phát biểu nào sau đây đúng nhất về nguyên tắc trung thực tuyệt đối:",
+        options: ["Chỉ áp dụng cho doanh nghiệp bảo hiểm", "Chỉ áp dụng cho bên mua bảo hiểm", "Là nghĩa vụ chung của cả doanh nghiệp bảo hiểm và bên mua bảo hiểm"],
+        answer: 2,
+        explain: "Theo khoản 1 Điều 16 Luật KDBH 2022, nguyên tắc trung thực tuyệt đối yêu cầu 'các bên tham gia hợp đồng bảo hiểm phải cung cấp thông tin, thực hiện các quyền và nghĩa vụ một cách trung thực nhất, trên cơ sở tin tưởng tuyệt đối lẫn nhau' — đây là nghĩa vụ hai chiều, áp dụng cho cả doanh nghiệp bảo hiểm lẫn bên mua bảo hiểm."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, trong hợp đồng bảo hiểm nhân thọ, hợp đồng bảo hiểm sức khỏe, bên mua bảo hiểm có thể mua bảo hiểm cho những người nào dưới đây (chọn phương án đúng nhất):",
+        options: ["Bản thân bên mua bảo hiểm.", "Vợ, chồng, cha, mẹ, con của bên mua bảo hiểm.", "Anh ruột, chị ruột, em ruột hoặc người khác có quan hệ nuôi dưỡng, cấp dưỡng với bên mua bảo hiểm.", "A, B, C đúng."],
+        answer: 3,
+        explain: "Theo Điều 34 Luật KDBH 2022 về quyền lợi có thể được bảo hiểm của hợp đồng bảo hiểm nhân thọ/sức khỏe, bên mua bảo hiểm có quyền lợi có thể được bảo hiểm đối với: bản thân, vợ/chồng/cha/mẹ/con, và anh chị em ruột hoặc người có quan hệ nuôi dưỡng, cấp dưỡng — vì đây là những người mà bên mua có mối quan hệ huyết thống/tình cảm/tài chính gắn bó thực sự."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, anh A mua một sản phẩm bảo hiểm nhân thọ tặng cháu B là con người bạn thân nhân dịp sinh nhật, doanh nghiệp bảo hiểm sẽ:",
+        options: ["Chấp thuận bảo hiểm với điều kiện tăng phí", "Không chấp thuận bảo hiểm vì anh A không có quyền lợi có thể được bảo hiểm với cháu B", "Chấp thuận bảo hiểm với điều kiện anh A đủ điều kiện tài chính đóng phí", "Chấp thuận bảo hiểm với điều kiện người thụ hưởng phải có quyền lợi có thể được bảo hiểm với anh A"],
+        answer: 1,
+        explain: "Theo nguyên tắc quyền lợi có thể được bảo hiểm (khoản 2 Điều 16 và Điều 34 Luật KDBH 2022), con của bạn thân không thuộc danh sách những người mà bên mua bảo hiểm có quyền lợi có thể được bảo hiểm (chỉ giới hạn ở bản thân, vợ/chồng/cha/mẹ/con, anh chị em ruột hoặc người có quan hệ nuôi dưỡng/cấp dưỡng). Vì vậy doanh nghiệp bảo hiểm không thể chấp thuận, dù có tăng phí hay đủ điều kiện tài chính — nguyên tắc này nhằm ngăn ngừa rủi ro trục lợi bảo hiểm liên quan đến tính mạng người khác."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, chọn phương án đúng nhất về \"Nguyên tắc bồi thường\":",
+        options: ["Số tiền bồi thường mà người được bảo hiểm nhận được không vượt quá thiệt hại thực tế trong sự kiện bảo hiểm, trừ trường hợp có thỏa thuận khác trong hợp đồng bảo hiểm", "Số tiền bồi thường mà người được bảo hiểm nhận được có thể lớn hơn thiệt hại thực tế trong sự kiện bảo hiểm", "Số tiền bồi thường mà người được bảo hiểm nhận được tùy thuộc vào thỏa thuận giữa doanh nghiệp bảo hiểm và người được bảo hiểm trong hợp đồng bảo hiểm", "B, C đúng"],
+        answer: 0,
+        explain: "Theo khoản 3 Điều 16 Luật KDBH 2022, nguyên tắc bồi thường quy định số tiền bồi thường không vượt quá thiệt hại thực tế, trừ khi hợp đồng có thỏa thuận khác — mục đích là đảm bảo bảo hiểm chỉ khôi phục lại tình trạng tài chính trước tổn thất, tránh việc người được bảo hiểm trục lợi từ chính sự kiện bảo hiểm."
+      },
+      {
+        q: "Trong lĩnh vực bảo hiểm, nguyên tắc nào sau đây không áp dụng đối với hợp đồng bảo hiểm nhân thọ và hợp đồng bảo hiểm sức khỏe:",
+        options: ["Nguyên tắc trung thực tuyệt đối", "Nguyên tắc thế quyền", "Nguyên tắc nguyên nhân trực tiếp", "Nguyên tắc quyền lợi có thể được bảo hiểm"],
+        answer: 1,
+        explain: "Theo khoản 4 Điều 16 Luật KDBH 2022, nguyên tắc thế quyền không áp dụng đối với hợp đồng bảo hiểm nhân thọ và hợp đồng bảo hiểm sức khỏe — vì đối tượng của hai loại hợp đồng này là tính mạng, sức khỏe con người, không thể quy đổi thành một khoản 'bồi hoàn' để doanh nghiệp bảo hiểm truy đòi người thứ ba như trong bảo hiểm tài sản/thiệt hại."
+      },
+      {
+        q: "Nguyên tắc khoán được áp dụng cho:",
+        options: ["Bảo hiểm nhân thọ", "Bảo hiểm tài sản", "Bảo hiểm trách nhiệm", "A, B, C đúng"],
+        answer: 0,
+        explain: "Nguyên tắc khoán (áp dụng phổ biến trong thực tế nghiệp vụ bảo hiểm nhân thọ) chi trả số tiền bảo hiểm cố định đã thỏa thuận trước tại hợp đồng khi xảy ra sự kiện bảo hiểm, không căn cứ vào 'thiệt hại thực tế' như nguyên tắc bồi thường — phù hợp với bảo hiểm nhân thọ vì tính mạng, sức khỏe con người không thể định giá thiệt hại thực tế theo cách tương tự tài sản."
+      },
+      {
+        q: "Chọn phương án đúng nhất về việc xác định số tiền mà doanh nghiệp bảo hiểm phải chi trả theo \"Nguyên tắc khoán\" khi xảy ra sự kiện bảo hiểm:",
+        options: ["Số tiền đã được thỏa thuận tại hợp đồng bảo hiểm", "Số tiền thiệt hại thực tế", "Số tiền chênh lệch giữa số tiền bảo hiểm thỏa thuận tại hợp đồng bảo hiểm và thiệt hại thực tế", "A, B, C đúng"],
+        answer: 0,
+        explain: "Đặc trưng của nguyên tắc khoán là chi trả đúng số tiền bảo hiểm đã thỏa thuận từ trước trong hợp đồng, không phụ thuộc vào thiệt hại thực tế xảy ra — khác biệt căn bản so với nguyên tắc bồi thường áp dụng cho bảo hiểm tài sản/thiệt hại."
+      },
+      {
+        q: "Một người được bảo hiểm bởi nhiều hợp đồng bảo hiểm nhân thọ tại nhiều doanh nghiệp bảo hiểm khác nhau, trong trường hợp xảy ra sự kiện bảo hiểm sẽ:",
+        options: ["Được hưởng quyền lợi bảo hiểm theo tất cả các hợp đồng bảo hiểm đã tham gia", "Chỉ được hưởng quyền lợi bảo hiểm có giá trị cao nhất trong số các quyền lợi bảo hiểm của các hợp đồng bảo hiểm đã tham gia", "Được hưởng quyền lợi bảo hiểm của một hợp đồng bảo hiểm tại mỗi doanh nghiệp bảo hiểm đã tham gia, cho dù người đó có thể có nhiều hơn một hợp đồng bảo hiểm tại một doanh nghiệp bảo hiểm", "Không được nhận quyền lợi bảo hiểm nào và nhận lại phí bảo hiểm đã đóng do vi phạm quy định về bảo hiểm trùng"],
+        answer: 0,
+        explain: "Vì áp dụng nguyên tắc khoán (không phải nguyên tắc bồi thường), bảo hiểm nhân thọ không bị giới hạn bởi quy định 'bảo hiểm trùng' như bảo hiểm tài sản/thiệt hại — người được bảo hiểm được hưởng đầy đủ quyền lợi từ TẤT CẢ các hợp đồng nhân thọ đã tham gia, dù ở một hay nhiều doanh nghiệp bảo hiểm khác nhau."
+      },
+      {
+        q: "Nguyên tắc thế quyền được hiểu thế nào là đúng nhất:",
+        options: ["Người được bảo hiểm có trách nhiệm chuyển giao cho doanh nghiệp bảo hiểm quyền yêu cầu người thứ ba có hành vi gây thiệt hại chịu trách nhiệm bồi hoàn trong phạm vi số tiền bồi thường bảo hiểm", "Doanh nghiệp bảo hiểm có quyền truy đòi người thức ba gây thiệt hại trong phạm vi số tiền đã bồi thường cho người được bảo hiểm", "A, B đúng", "A, B sai"],
+        answer: 2,
+        explain: "Theo khoản 4 Điều 16 Luật KDBH 2022, nguyên tắc thế quyền có hai mặt tương ứng: người được bảo hiểm có nghĩa vụ chuyển giao quyền đòi bồi hoàn cho doanh nghiệp bảo hiểm, và ngược lại doanh nghiệp bảo hiểm có quyền thay mặt truy đòi người thứ ba gây thiệt hại — trong phạm vi số tiền đã bồi thường."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, nguyên tắc thế quyền không được áp dụng trong loại hợp đồng bảo hiểm nào sau đây:",
+        options: ["Bảo hiểm tài sản", "Bảo hiểm thiệt hại", "Bảo hiểm trách nhiệm", "Bảo hiểm nhân thọ"],
+        answer: 3,
+        explain: "Theo khoản 4 Điều 16 Luật KDBH 2022, thế quyền không áp dụng cho hợp đồng bảo hiểm nhân thọ (và cả bảo hiểm sức khỏe) — vì tính mạng và sức khỏe con người không thể quy đổi thành khoản 'bồi hoàn' vật chất để doanh nghiệp bảo hiểm truy đòi bên gây thiệt hại như đối với tài sản."
+      },
+      {
+        q: "Nguyên tắc thế quyền được hiểu thế nào là đúng nhất:",
+        options: ["Người được bảo hiểm có trách nhiệm chuyển giao cho doanh nghiệp bảo hiểm quyền yêu cầu người thứ ba có hành vi gây thiệt hại chịu trách nhiệm bồi hoàn trong phạm vi số tiền bồi thường bảo hiểm.", "Doanh nghiệp bảo hiểm đòi bồi hoàn bên thứ ba trong phạm vi số tiền đã bồi thường cho người được bảo hiểm.", "Nguyên tắc này không áp dụng đối với hợp đồng bảo hiểm nhân thọ và hợp đồng bảo hiểm sức khỏe.", "A, B đúng.", "A, B, C đúng."],
+        answer: 4,
+        explain: "Tổng hợp đầy đủ nội dung khoản 4 Điều 16 Luật KDBH 2022: nguyên tắc thế quyền gồm cả việc chuyển giao quyền đòi bồi hoàn từ người được bảo hiểm sang doanh nghiệp bảo hiểm, quyền truy đòi bên thứ ba của doanh nghiệp bảo hiểm, và việc loại trừ áp dụng đối với bảo hiểm nhân thọ, bảo hiểm sức khỏe."
+      },
+      {
+        q: "Theo Luật Kinh doanh bảo hiểm, trong hợp đồng bảo hiểm sức khỏe, trường hợp người được bảo hiểm bị thương tật hoặc đau ốm do hành vi trực tiếp hoặc gián tiếp của người thứ ba gây ra thì:",
+        options: ["Doanh nghiệp bảo hiểm vẫn có nghĩa vụ bồi thường, trả tiền bảo hiểm theo thỏa thuận trong hợp đồng bảo và được quyền yêu cầu người thứ ba bồi hoàn khoản tiền mà doanh nghiệp bảo hiểm đã trả cho người thụ hưởng.", "Doanh nghiệp bảo hiểm có quyền từ chối bồi thường và yêu cầu người thứ ba bồi thường trực tiếp cho người được bảo hiểm.", "Doanh nghiệp bảo hiểm vẫn có nghĩa vụ bồi thường, trả tiền bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm mà không có quyền yêu cầu người thứ ba bồi hoàn khoản tiền mà doanh nghiệp bảo hiểm đã trả cho người thụ hưởng."],
+        answer: 2,
+        explain: "Vì thế quyền không áp dụng cho bảo hiểm sức khỏe (khoản 4 Điều 16 Luật KDBH 2022), doanh nghiệp bảo hiểm vẫn phải thực hiện đầy đủ nghĩa vụ chi trả theo hợp đồng dù thương tật do người thứ ba gây ra, nhưng KHÔNG được quyền truy đòi lại khoản tiền đó từ người thứ ba — người được bảo hiểm vẫn có quyền tự mình đòi bồi thường dân sự từ người gây thiệt hại, độc lập với quyền lợi bảo hiểm đã nhận."
+      },
+      {
+        q: "Chọn phương án đúng nhất về \"Nguyên tắc đóng góp bồi thường\":",
+        options: ["Khi đối tượng bảo hiểm bị tổn thất thuộc phạm vi bảo hiểm, các doanh nghiệp bảo hiểm có nghĩa vụ đóng góp bồi thường căn cứ theo tỷ lệ phần trách nhiệm bảo hiểm đã nhận bảo hiểm", "Tổng số tiền bồi thường không vượt quá thiệt hại thực tế của người được bảo hiểm trong sự kiện bảo hiểm", "Nguyên tắc này không áp dụng cho bảo hiểm nhân thọ", "A, B, C đúng"],
+        answer: 3,
+        explain: "Nguyên tắc đóng góp bồi thường là hệ quả trực tiếp của nguyên tắc bồi thường (khoản 3 Điều 16 Luật KDBH 2022): khi một đối tượng được bảo hiểm bởi nhiều doanh nghiệp (đồng bảo hiểm hoặc bảo hiểm trùng), mỗi doanh nghiệp chỉ đóng góp bồi thường theo đúng tỷ lệ trách nhiệm đã nhận, và tổng số tiền các bên chi trả cộng lại không được vượt quá thiệt hại thực tế. Nguyên tắc này gắn với nguyên tắc bồi thường nên không áp dụng cho bảo hiểm nhân thọ (vốn áp dụng nguyên tắc khoán)."
+      },
+      {
+        q: "Nguyên tắc đóng góp bồi thường có liên quan trực tiếp nhất đến nguyên tắc nào sau đây:",
+        options: ["Nguyên tắc thế quyền.", "Nguyên tắc bồi thường.", "Nguyên tắc nguyên nhân trực tiếp.", "Nguyên tắc quyền lợi có thể được bảo hiểm."],
+        answer: 1,
+        explain: "Nguyên tắc đóng góp bồi thường tồn tại chính là để bảo đảm nguyên tắc bồi thường (khoản 3 Điều 16 Luật KDBH 2022) được thực thi đúng — tức tổng số tiền người được bảo hiểm nhận từ nhiều nguồn (nhiều doanh nghiệp bảo hiểm) không vượt quá thiệt hại thực tế, tránh trục lợi khi tham gia nhiều hợp đồng cùng bảo hiểm cho một đối tượng."
+      },
+      {
+        q: "Trong bảo hiểm sức khỏe, chi phí y tế điều trị tai nạn của người được bảo hiểm được doanh nghiệp bảo hiểm chỉ trả theo nguyên tắc nào?",
+        options: ["Nguyên tắc khoán.", "Nguyên tắc bồi thường.", "A, B đúng."],
+        answer: 1,
+        explain: "Khác với bảo hiểm nhân thọ (áp dụng nguyên tắc khoán), bảo hiểm sức khỏe — đặc biệt là quyền lợi chi phí y tế/nằm viện — thường chi trả theo nguyên tắc bồi thường (khoản 3 Điều 16 Luật KDBH 2022): số tiền chi trả căn cứ theo chi phí y tế thực tế phát sinh, không vượt quá thiệt hại thực tế, trong giới hạn số tiền bảo hiểm đã thỏa thuận."
+      }
+    ]
+  },
+  { id: 4, name: "Chủ đề 4", questions: [] },
+  { id: 5, name: "Chủ đề 5", questions: [] },
+  { id: 6, name: "Chủ đề 6", questions: [] },
+  { id: 7, name: "Chủ đề 7", questions: [] },
+  { id: 8, name: "Chủ đề 8", questions: [] },
+  { id: 9, name: "Chủ đề 9", questions: [] },
+  { id: 10, name: "Chủ đề 10", questions: [] }
+];
+
+// ==========================================================================
+// 10 ĐỀ THI THỬ (MOF1 - MOF10) — nội dung sẽ được bổ sung sau
+// Cấu trúc mỗi câu hỏi giống hệt TOPICS_DATA: { q, options, answer, explain }
+// ==========================================================================
+const MOCKS_DATA = [
+  { id: 1, name: "MOF1", questions: [] },
+  { id: 2, name: "MOF2", questions: [] },
+  { id: 3, name: "MOF3", questions: [] },
+  { id: 4, name: "MOF4", questions: [] },
+  { id: 5, name: "MOF5", questions: [] },
+  { id: 6, name: "MOF6", questions: [] },
+  { id: 7, name: "MOF7", questions: [] },
+  { id: 8, name: "MOF8", questions: [] },
+  { id: 9, name: "MOF9", questions: [] },
+  { id: 10, name: "MOF10", questions: [] }
+];
+
+
+/* ==========================================================================
+   CẤU HÌNH
+   ========================================================================== */
+const PASS_THRESHOLD = 0.8;
+const EXAM_MINUTES = 60; // thời gian làm bài mặc định cho MỌI chủ đề và đề thi thử (phút)
+const SHEET_WEBHOOK_URL = "";
+// Đường dẫn ảnh nền cho màn hình đăng ký — thay bằng ảnh thật của công ty (ảnh đội ngũ tư vấn/lễ vinh danh...)
+// Đặt file ảnh cùng thư mục với index.html và sửa tên file bên dưới cho khớp.
+const BACKGROUND_IMAGE_URL = "https://images.unsplash.com/photo-1758518731468-98e90ffd7430?fm=jpg&q=70&w=1600&auto=format&fit=crop&ixlib=rb-4.1.0";
+// Ảnh: "Team of businessmen and businesswomen standing together" — Vitaly Gariev, Unsplash License (miễn phí, được phép dùng thương mại).
+// Muốn đổi ảnh khác: thay URL trên bằng link ảnh của anh, hoặc dùng ảnh riêng: "assets/ten-file.jpg" (đặt file cùng thư mục index.html).
+
+const LS_PROFILE = "iq_profile_v2";
+const LS_PROGRESS = "iq_progress_v2";
+const LS_MOCK_PROGRESS = "iq_mock_progress_v2";
+const LS_WARNINGS = "iq_warnings_v2";
+
+const VN_MONTHS = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
+
+/* ==========================================================================
+   STORAGE HELPERS
+   ========================================================================== */
+function loadJSON(key, fallback){
+  try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch(e){ return fallback; }
+}
+function saveJSON(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ console.error("Lỗi lưu dữ liệu", e); }
+}
+function getProfile(){ return loadJSON(LS_PROFILE, null); }
+function setProfile(p){ saveJSON(LS_PROFILE, p); }
+
+function getProgress(){
+  let p = loadJSON(LS_PROGRESS, null);
+  if(!p){
+    p = {};
+    TOPICS_DATA.forEach((t, idx)=>{
+      p[t.id] = { status: idx===0 ? "unlocked" : "locked", bestScore:0, attempts:0, sumScore:0 };
+    });
+    saveJSON(LS_PROGRESS, p);
+  }
+  TOPICS_DATA.forEach((t,idx)=>{ if(!p[t.id]) p[t.id] = { status: idx===0?"unlocked":"locked", bestScore:0, attempts:0, sumScore:0 }; });
+  return p;
+}
+function setProgress(p){ saveJSON(LS_PROGRESS, p); }
+
+function getMockProgress(){
+  let p = loadJSON(LS_MOCK_PROGRESS, null);
+  if(!p){
+    p = {};
+    MOCKS_DATA.forEach(m=>{ p[m.id] = { bestScore:0, attempts:0, sumScore:0 }; });
+    saveJSON(LS_MOCK_PROGRESS, p);
+  }
+  MOCKS_DATA.forEach(m=>{ if(!p[m.id]) p[m.id] = { bestScore:0, attempts:0, sumScore:0 }; });
+  return p;
+}
+function setMockProgress(p){ saveJSON(LS_MOCK_PROGRESS, p); }
+
+function getWarnings(){ return loadJSON(LS_WARNINGS, []); }
+function addWarning(entry){
+  const w = getWarnings(); w.push(entry); saveJSON(LS_WARNINGS, w);
+  syncToSheet("warning", entry);
+}
+
+function studentKey(profile){
+  if(!profile) return "";
+  return profile.name.trim().toUpperCase().replace(/\s+/g," ") + "|" + profile.dob + "|" + profile.cccd4;
+}
+
+function formatDobVN(iso){
+  if(!iso) return "";
+  const [y,m,d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+/* ==========================================================================
+   ĐỒNG BỘ GOOGLE SHEET (tùy chọn)
+   ========================================================================== */
+function syncToSheet(type, payload){
+  if(!SHEET_WEBHOOK_URL) return;
+  const profile = getProfile();
+  const body = Object.assign({
+    type, timestamp: new Date().toISOString(),
+    studentKey: studentKey(profile),
+    name: profile ? profile.name : "",
+    dob: profile ? profile.dob : "",
+    classCode: profile ? profile.classCode : "",
+    deviceId: getDeviceId()
+  }, payload);
+  fetch(SHEET_WEBHOOK_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"}, body: JSON.stringify(body) })
+    .catch(()=>{});
+}
+function getDeviceId(){
+  let id = localStorage.getItem("iq_device_id");
+  if(!id){ id = "dev_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36); localStorage.setItem("iq_device_id", id); }
+  return id;
+}
+
+/* ==========================================================================
+   STATE
+   ========================================================================== */
+let state = {
+  screen: "loading",
+  activeTab: "topics",     // topics | mocks
+  quizKind: null,          // "topic" | "mock"
+  currentItemId: null,
+  quiz: null,
+  lastResult: null
+};
+
+function getDataset(kind){ return kind==="mock" ? MOCKS_DATA : TOPICS_DATA; }
+
+/* ==========================================================================
+   RENDER ROOT
+   ========================================================================== */
+function render(){
+  const root = document.getElementById("app");
+  const profile = getProfile();
+
+  if(!profile){ root.innerHTML = renderRegister(); bindRegisterEvents(); return; }
+
+  if(state.screen === "quiz" && state.quiz){
+    root.innerHTML = renderQuizPage();
+    bindQuizEvents();
+    return;
+  }
+
+  if(state.screen === "result" && state.lastResult){
+    root.innerHTML = renderTopBarSimple() + renderResultScreen();
+    bindResultEvents();
+    return;
+  }
+
+  root.innerHTML = renderTopBarMain(profile) + renderListScreen(state.activeTab==="mocks" ? "mock" : "topic");
+  bindMainEvents();
+}
+
+/* ==========================================================================
+   REGISTER SCREEN
+   ========================================================================== */
+function renderRegister(){
+  const now = new Date();
+  const curYear = now.getFullYear();
+  let dayOpts = "";
+  for(let d=1; d<=31; d++) dayOpts += `<option value="${d}">${d}</option>`;
+  let monthOpts = "";
+  VN_MONTHS.forEach((m,i)=>{ monthOpts += `<option value="${i+1}">${m}</option>`; });
+  let yearOpts = "";
+  for(let y=curYear; y>=curYear-80; y--) yearOpts += `<option value="${y}">${y}</option>`;
+
+  return `
+  <div class="reg-page">
+    <div class="reg-bg" style="background-image:url('${BACKGROUND_IMAGE_URL}')"></div>
+    <div class="reg-overlay"></div>
+    <div class="reg-content">
+      <div class="reg-hero">
+        <h1>ÔN THI ĐẠI LÝ BẢO HIỂM</h1>
+        <p>Luyện mê say – Đậu liền tay!</p>
+      </div>
+      <div class="reg-card">
+        <p class="reg-title">Thông tin học viên</p>
+        <p class="reg-sub">Vui lòng nhập chính xác thông tin bên dưới. Dữ liệu được lưu ngay trên thiết bị này để theo dõi tiến trình ôn luyện của bạn.</p>
+
+        <div class="field">
+          <label>Họ và tên <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="f_name" placeholder="Ví dụ: Nguyễn Văn A">
+        </div>
+
+        <div class="field">
+          <label>Ngày tháng năm sinh <span style="color:var(--danger)">*</span></label>
+          <div class="dob-row">
+            <select id="f_dob_d"><option value="">Ngày</option>${dayOpts}</select>
+            <select id="f_dob_m"><option value="">Tháng</option>${monthOpts}</select>
+            <select id="f_dob_y"><option value="">Năm</option>${yearOpts}</select>
+          </div>
+          <div class="dob-preview" id="dobPreview"></div>
+        </div>
+
+        <div class="field">
+          <label>4 số cuối CCCD <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="f_cccd" maxlength="4" inputmode="numeric" placeholder="Ví dụ: 4821">
+          <p class="hint">Chỉ dùng để phân biệt học viên trùng tên, không lưu đầy đủ số CCCD.</p>
+        </div>
+
+        <div class="field">
+          <label>Mã lớp học <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="f_class" maxlength="10" placeholder="Ví dụ: OBHN250726">
+          <p class="hint">Tối đa 10 ký tự. Do giảng viên cung cấp cho lớp học của bạn.</p>
+        </div>
+
+        <p class="error-msg" id="reg_error">Vui lòng nhập đầy đủ thông tin bắt buộc.</p>
+        <button class="btn" id="btn_register">Bắt đầu ôn luyện</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateDobPreview(){
+  const d = document.getElementById("f_dob_d").value;
+  const m = document.getElementById("f_dob_m").value;
+  const y = document.getElementById("f_dob_y").value;
+  const el = document.getElementById("dobPreview");
+  if(d && m && y){ el.textContent = `Đã chọn: ${d.padStart(2,"0")}/${m.padStart(2,"0")}/${y}`; }
+  else { el.textContent = ""; }
+}
+
+function bindRegisterEvents(){
+  ["f_dob_d","f_dob_m","f_dob_y"].forEach(id=>{
+    document.getElementById(id).addEventListener("change", updateDobPreview);
+  });
+  ["f_name","f_class"].forEach(id=>{
+    const el = document.getElementById(id);
+    el.addEventListener("input", ()=>{
+      const pos = el.selectionStart;
+      el.value = el.value.toUpperCase();
+      try{ el.setSelectionRange(pos, pos); }catch(e){}
+    });
+  });
+  document.getElementById("btn_register").onclick = ()=>{
+    const name = document.getElementById("f_name").value.trim().toUpperCase();
+    const d = document.getElementById("f_dob_d").value;
+    const m = document.getElementById("f_dob_m").value;
+    const y = document.getElementById("f_dob_y").value;
+    const cccd4 = document.getElementById("f_cccd").value.trim();
+    const classCode = document.getElementById("f_class").value.trim().toUpperCase();
+    const err = document.getElementById("reg_error");
+    if(!name || !d || !m || !y || !cccd4 || cccd4.length!==4 || !classCode){
+      err.style.display = "block";
+      return;
+    }
+    err.style.display = "none";
+    const dob = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const profile = { name, dob, cccd4, classCode, registeredAt: new Date().toISOString() };
+    setProfile(profile);
+    getProgress(); getMockProgress();
+    syncToSheet("register", {});
+    render();
+  };
+}
+
+/* ==========================================================================
+   TOP BARS
+   ========================================================================== */
+function renderTopBarMain(profile){
+  return `
+  <div class="topbar">
+    <div class="topbar-toprow">
+      <div>
+        <div class="student-name">${escapeHtml(profile.name)}</div>
+        <div class="app-title">Lớp ${escapeHtml(profile.classCode)} · Ôn thi Đại lý Bảo hiểm</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-shrink:0;">
+        <button class="logout-btn" id="btn_logout" title="Đăng xuất / Đăng ký lại">🚪 ĐĂNG XUẤT</button>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab ${state.activeTab==='topics'?'active':''}" data-tab="topics">CHỦ ĐỀ</div>
+      <div class="tab ${state.activeTab==='mocks'?'active':''}" data-tab="mocks">ĐỀ THI THỬ</div>
+    </div>
+  </div>`;
+}
+function renderTopBarSimple(){ return `<div class="topbar" style="padding-bottom:16px;"><div class="student-name" style="font-size:16px;">Kết quả bài làm</div></div>`; }
+
+/* ==========================================================================
+   LIST SCREEN (dùng chung cho Chủ đề & Đề thi thử)
+   ========================================================================== */
+function renderListScreen(kind){
+  const dataset = getDataset(kind);
+  const progress = kind==="mock" ? getMockProgress() : getProgress();
+  const warnings = getWarnings();
+
+  let passedCount=0, totalAttempts=0, sumBest=0, graded=0;
+  dataset.forEach(item=>{
+    const st = progress[item.id] || {};
+    totalAttempts += st.attempts||0;
+    if(kind==="topic" && st.status==="passed") passedCount++;
+    if(kind==="mock" && (st.bestScore||0) >= PASS_THRESHOLD) passedCount++;
+    if(st.attempts>0){ sumBest += st.bestScore||0; graded++; }
+  });
+  const avgScore = graded>0 ? Math.round((sumBest/graded)*100) : 0;
+
+  let html = `<div class="screen">`;
+  html += `
+  <div class="stat-strip">
+    <div class="stat-chip"><div class="n">${passedCount}/${dataset.length}</div><div class="l">${kind==='mock'?'Đề đạt':'Chủ đề đạt'}</div></div>
+    <div class="stat-chip"><div class="n">${avgScore}%</div><div class="l">Điểm TB</div></div>
+    <div class="stat-chip"><div class="n">${totalAttempts}</div><div class="l">Lượt làm</div></div>
+    <div class="stat-chip"><div class="n" style="color:${warnings.length>0?'var(--danger)':'var(--success)'}">${warnings.length}</div><div class="l">Cảnh báo</div></div>
+  </div>`;
+
+  html += `<p class="section-title">${kind==='mock' ? '10 đề thi thử' : '10 chủ đề ôn luyện'}</p>`;
+
+  dataset.forEach((item, idx)=>{
+    const st = progress[item.id] || {status: kind==="mock" ? "unlocked" : "locked", bestScore:0, attempts:0, sumScore:0};
+    const hasContent = item.questions.length > 0;
+    let cardState = "unlocked";
+    if(!hasContent) cardState = "empty";
+    else if(kind==="topic" && st.status==="locked") cardState = "locked";
+    else if(kind==="topic" && st.status==="passed") cardState = "passed";
+    else if(kind==="mock" && st.attempts>0 && st.bestScore>=PASS_THRESHOLD) cardState = "passed";
+
+    let icon = "▶️";
+    if(cardState==="empty") icon = "🕓";
+    else if(cardState==="locked") icon = "🔒";
+    else if(cardState==="passed") icon = "✅";
+
+    const best = st.attempts>0 ? Math.round((st.bestScore||0)*100) : null;
+    const avg = st.attempts>0 ? Math.round(((st.sumScore||0)/st.attempts)*100) : null;
+
+    let meta1 = hasContent ? `${item.questions.length} câu hỏi` : "Nội dung đang được cập nhật";
+    let meta2 = "";
+    if(hasContent){
+      if(cardState==="locked"){
+        meta2 = `<div class="meta2">Hoàn thành chủ đề trước để mở khóa</div>`;
+      } else {
+        meta2 = `<div class="meta2">
+          <span>🏆 Cao nhất: <b>${best!==null? best+'%' : '—'}</b></span>
+          <span>🔁 Lượt: <b>${st.attempts||0}</b></span>
+          <span>📊 TB: <b>${avg!==null? avg+'%' : '—'}</b></span>
+        </div>`;
+      }
+    }
+
+    html += `
+    <div class="topic-card ${cardState}" data-kind="${kind}" data-id="${item.id}">
+      <div class="topic-badge">${idx+1}</div>
+      <div class="topic-info">
+        <p class="name">${escapeHtml(item.name)}</p>
+        <p class="meta1">${meta1}</p>
+        ${meta2}
+      </div>
+      <div class="topic-status">${icon}</div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  return html;
+}
+
+function bindMainEvents(){
+  document.querySelectorAll(".tab").forEach(el=>{ el.onclick = ()=>{ state.activeTab = el.dataset.tab; render(); }; });
+  const logoutBtn = document.getElementById("btn_logout"); if(logoutBtn) logoutBtn.onclick = showLogoutConfirm;
+  document.querySelectorAll(".topic-card[data-id]").forEach(el=>{
+    el.onclick = ()=>{
+      const kind = el.dataset.kind;
+      const id = parseInt(el.dataset.id, 10);
+      const dataset = getDataset(kind);
+      const item = dataset.find(x=>x.id===id);
+      if(!item || item.questions.length===0) return;
+      if(kind==="topic"){
+        const progress = getProgress();
+        const st = progress[id];
+        if(!st || st.status==="locked") return;
+      }
+      startQuiz(kind, id);
+    };
+  });
+}
+
+function showLogoutConfirm(){
+  const div = document.createElement("div");
+  div.className = "modal-backdrop";
+  div.innerHTML = `
+    <div class="modal-box">
+      <div class="micon">🚪</div>
+      <h3>Đăng ký lại với lớp mới?</h3>
+      <p>Toàn bộ thông tin và tiến trình ôn luyện hiện tại trên thiết bị này (điểm số, lượt làm bài, cảnh báo) sẽ bị <b>xóa vĩnh viễn</b> để bạn đăng ký lại với mã lớp mới. Bạn có chắc chắn muốn tiếp tục không?</p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="modal_logout_cancel">HỦY BỎ</button>
+        <button class="btn" style="background:var(--danger)" id="modal_logout_confirm">XÁC NHẬN</button>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  document.getElementById("modal_logout_cancel").onclick = ()=> div.remove();
+  document.getElementById("modal_logout_confirm").onclick = ()=>{
+    localStorage.removeItem(LS_PROFILE);
+    localStorage.removeItem(LS_PROGRESS);
+    localStorage.removeItem(LS_MOCK_PROGRESS);
+    localStorage.removeItem(LS_WARNINGS);
+    div.remove();
+    state = { screen:"loading", activeTab:"topics", quizKind:null, currentItemId:null, quiz:null, lastResult:null };
+    render();
+  };
+}
+
+
+/* ==========================================================================
+   QUIZ ENGINE (dạng trượt kéo lên xuống — trả lời hết rồi mới nộp bài)
+   ========================================================================== */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function startQuiz(kind, id){
+  const dataset = getDataset(kind);
+  const item = dataset.find(x=>x.id===id);
+  const order = shuffle(item.questions.map((_,i)=>i));
+  const totalSeconds = EXAM_MINUTES * 60;
+  state.quizKind = kind;
+  state.currentItemId = id;
+  state.quiz = { order, answers: new Array(order.length).fill(null), secondsLeft: totalSeconds, timerHandle:null, warningCount:0 };
+  state.screen = "quiz";
+  startAntiCheat();
+  render();
+  startTimer();
+}
+
+function startTimer(){
+  if(state.quiz.timerHandle) clearInterval(state.quiz.timerHandle);
+  state.quiz.timerHandle = setInterval(()=>{
+    if(!state.quiz) return;
+    state.quiz.secondsLeft--;
+    const timerEl = document.getElementById("quizTimer");
+    if(timerEl){
+      const mm = String(Math.floor(Math.max(0,state.quiz.secondsLeft)/60)).padStart(2,"0");
+      const ss = String(Math.max(0,state.quiz.secondsLeft)%60).padStart(2,"0");
+      timerEl.textContent = "⏱ " + mm + ":" + ss;
+    }
+    if(state.quiz.secondsLeft<=0){
+      clearInterval(state.quiz.timerHandle);
+      finishQuiz(true);
+    }
+  }, 1000);
+}
+
+function renderQuizPage(){
+  const item = getDataset(state.quizKind).find(x=>x.id===state.currentItemId);
+  const q = state.quiz;
+  const mm = String(Math.floor(q.secondsLeft/60)).padStart(2,"0");
+  const ss = String(q.secondsLeft%60).padStart(2,"0");
+
+  let slidesHtml = "";
+  q.order.forEach((qIndex, i)=>{
+    const question = item.questions[qIndex];
+    let optsHtml = "";
+    question.options.forEach((opt, oi)=>{
+      const dotLabel = String.fromCharCode(65+oi);
+      optsHtml += `<div class="opt" data-slide="${i}" data-opt="${oi}"><div class="dot">${dotLabel}</div><div>${escapeHtml(opt)}</div></div>`;
+    });
+    slidesHtml += `
+    <section class="qslide" data-idx="${i}">
+      <div class="qnum">Câu ${i+1}/${q.order.length}</div>
+      <div class="qcard">
+        <p class="qtext">${escapeHtml(question.q)}</p>
+        <div>${optsHtml}</div>
+      </div>
+    </section>`;
+  });
+  slidesHtml += `
+  <section class="qslide submit-slide" data-idx="${q.order.length}">
+    <div class="icon">🎯</div>
+    <h3>Bạn đã hoàn thành tất cả câu hỏi</h3>
+    <p>Kiểm tra lại nếu cần, sau đó bấm Nộp bài để xem kết quả và giải thích chi tiết.</p>
+  </section>`;
+
+  return `
+  <div class="quiz-page">
+    <div class="quiz-header">
+      <div class="quiz-header-row">
+        <button class="exit-btn" id="btn_exit">✕ Thoát</button>
+        <div class="quiz-title">${escapeHtml(item.name)}</div>
+        <div class="timer" id="quizTimer">⏱ ${mm}:${ss}</div>
+      </div>
+      <div class="quiz-progress-track"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+    </div>
+    <div class="quiz-scroll" id="quizScroll">${slidesHtml}</div>
+    <div class="quiz-footer">
+      <div class="answered-count" id="answeredCount">Đã trả lời: 0/${q.order.length}</div>
+      <button class="btn" id="btn_submit" disabled>Nộp bài</button>
+    </div>
+  </div>`;
+}
+
+function bindQuizEvents(){
+  const item = getDataset(state.quizKind).find(x=>x.id===state.currentItemId);
+  const q = state.quiz;
+  const scrollEl = document.getElementById("quizScroll");
+  const answeredCountEl = document.getElementById("answeredCount");
+  const submitBtn = document.getElementById("btn_submit");
+  const progressFill = document.getElementById("quizProgressFill");
+
+  function refreshAnsweredUI(){
+    const answered = q.answers.filter(a=>a!==null).length;
+    answeredCountEl.textContent = `Đã trả lời: ${answered}/${q.order.length}`;
+    submitBtn.disabled = answered < q.order.length;
+  }
+  refreshAnsweredUI();
+
+  scrollEl.querySelectorAll(".opt").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const slideIdx = parseInt(el.dataset.slide,10);
+      const optIdx = parseInt(el.dataset.opt,10);
+      q.answers[slideIdx] = optIdx;
+      scrollEl.querySelectorAll(`.opt[data-slide="${slideIdx}"]`).forEach(o=>o.classList.remove("selected"));
+      el.classList.add("selected");
+      refreshAnsweredUI();
+    });
+  });
+
+  scrollEl.addEventListener("scroll", ()=>{
+    const pct = Math.min(100, Math.round((scrollEl.scrollTop / (scrollEl.scrollHeight - scrollEl.clientHeight || 1)) * 100));
+    progressFill.style.width = pct + "%";
+  });
+
+  document.getElementById("btn_exit").onclick = showExitConfirm;
+  submitBtn.onclick = ()=>{ if(!submitBtn.disabled) finishQuiz(false); };
+}
+
+function showExitConfirm(){
+  const div = document.createElement("div");
+  div.className = "modal-backdrop";
+  div.innerHTML = `
+    <div class="modal-box">
+      <div class="micon">⚠️</div>
+      <h3>Thoát khỏi bài làm?</h3>
+      <p>Kết quả sẽ <b>không được ghi nhận</b> nếu bạn thoát bây giờ. Bạn có chắc chắn muốn thoát không?</p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="modal_cancel">HỦY BỎ</button>
+        <button class="btn" style="background:var(--danger)" id="modal_confirm">XÁC NHẬN</button>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  document.getElementById("modal_cancel").onclick = ()=> div.remove();
+  document.getElementById("modal_confirm").onclick = ()=>{
+    div.remove();
+    exitQuizWithoutSaving();
+  };
+}
+
+function exitQuizWithoutSaving(){
+  if(state.quiz && state.quiz.timerHandle) clearInterval(state.quiz.timerHandle);
+  stopAntiCheat();
+  state.quiz = null;
+  state.screen = null;
+  render();
+}
+
+function finishQuiz(timeUp){
+  const kind = state.quizKind;
+  const item = getDataset(kind).find(x=>x.id===state.currentItemId);
+  const q = state.quiz;
+  if(q.timerHandle) clearInterval(q.timerHandle);
+  stopAntiCheat();
+
+  let correct = 0;
+  const reviewItems = [];
+  q.order.forEach((qIndex, i)=>{
+    const question = item.questions[qIndex];
+    const ans = q.answers[i];
+    const isCorrect = ans === question.answer;
+    if(isCorrect) correct++;
+    reviewItems.push({ q:question.q, options:question.options, answer:question.answer, chosen:ans, explain:question.explain, isCorrect });
+  });
+  const total = item.questions.length;
+  const score = total>0 ? correct/total : 0;
+  const passed = score >= PASS_THRESHOLD;
+
+  if(kind==="topic"){
+    const progress = getProgress();
+    const st = progress[item.id] || {status:"unlocked", bestScore:0, attempts:0, sumScore:0};
+    st.attempts = (st.attempts||0)+1;
+    st.sumScore = (st.sumScore||0)+score;
+    st.bestScore = Math.max(st.bestScore||0, score);
+    if(passed) st.status = "passed"; else if(st.status!=="passed") st.status = "unlocked";
+    progress[item.id] = st;
+    if(passed){
+      const idx = TOPICS_DATA.findIndex(t=>t.id===item.id);
+      const nextTopic = TOPICS_DATA[idx+1];
+      if(nextTopic){
+        const nst = progress[nextTopic.id] || {status:"locked", bestScore:0, attempts:0, sumScore:0};
+        if(nst.status==="locked") nst.status = "unlocked";
+        progress[nextTopic.id] = nst;
+      }
+    }
+    setProgress(progress);
+  } else {
+    const mp = getMockProgress();
+    const st = mp[item.id] || {bestScore:0, attempts:0, sumScore:0};
+    st.attempts = (st.attempts||0)+1;
+    st.sumScore = (st.sumScore||0)+score;
+    st.bestScore = Math.max(st.bestScore||0, score);
+    mp[item.id] = st;
+    setMockProgress(mp);
+  }
+
+  syncToSheet("quiz_result", { kind, itemId:item.id, itemName:item.name, score, correct, total, passed, timeUp, warnings:q.warningCount||0 });
+
+  state.lastResult = { item, kind, score, correct, total, passed, timeUp, reviewItems };
+  state.quiz = null;
+  state.screen = "result";
+  render();
+}
+
+function renderResultScreen(){
+  const r = state.lastResult;
+  const pct = Math.round(r.score*100);
+  const backLabel = r.kind==="mock" ? "Quay lại Đề thi thử" : "Quay lại Chủ đề ôn tập";
+  let html = `<div class="screen">`;
+  html += `
+    <div class="result-hero">
+      <div class="result-ring ${r.passed?'pass':'fail'}" style="--pct:${pct}"><div class="inner">${pct}%</div></div>
+      <p class="result-title">${r.passed ? "🎉 Đạt yêu cầu!" : "Chưa đạt 80%"}</p>
+      <p class="result-sub">${escapeHtml(r.item.name)} · Đúng ${r.correct}/${r.total} câu ${r.timeUp?"· Hết giờ làm bài":""}${r.kind==='topic' && r.passed ? " · Chủ đề tiếp theo đã được mở khóa" : ""}</p>
+      <button class="btn secondary btn-backlist" style="margin-bottom:10px;">${backLabel}</button>
+    </div>
+    <p class="section-title">Xem lại bài làm</p>`;
+  r.reviewItems.forEach((it, idx)=>{
+    html += `
+    <div class="review-item">
+      <span class="review-tag ${it.isCorrect?'ok':'bad'}">${it.isCorrect ? "Đúng":"Sai"}</span>
+      <p class="review-q">Câu ${idx+1}: ${escapeHtml(it.q)}</p>
+      <div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px;">
+        Đáp án đúng: <b style="color:var(--success)">${escapeHtml(it.options[it.answer])}</b>
+        ${!it.isCorrect && it.chosen!==null ? `<br>Bạn chọn: <b style="color:var(--danger)">${escapeHtml(it.options[it.chosen])}</b>` : ""}
+        ${it.chosen===null ? `<br><i>Chưa trả lời</i>` : ""}
+      </div>
+      <div class="explain-box"><b>Giải thích:</b> ${escapeHtml(it.explain)}</div>
+    </div>`;
+  });
+  html += `<button class="btn btn-backlist" style="margin-top:6px;">${backLabel}</button>`;
+  html += `</div>`;
+  return html;
+}
+function bindResultEvents(){
+  document.querySelectorAll(".btn-backlist").forEach(btn=>{
+    btn.onclick = ()=>{
+      state.activeTab = state.lastResult.kind==="mock" ? "mocks" : "topics";
+      state.screen = null; state.lastResult = null;
+      render();
+    };
+  });
+}
+
+/* ==========================================================================
+   ANTI-CHEAT
+   ========================================================================== */
+let _hiddenSince = null;
+function onVisibilityChange(){
+  if(document.hidden){ _hiddenSince = Date.now(); }
+  else if(_hiddenSince){
+    const awaySeconds = Math.round((Date.now()-_hiddenSince)/1000);
+    _hiddenSince = null;
+    if(awaySeconds>=2 && state.quiz) registerCheatWarning(awaySeconds);
+  }
+}
+function registerCheatWarning(awaySeconds){
+  if(!state.quiz) return;
+  state.quiz.warningCount = (state.quiz.warningCount||0)+1;
+  const item = getDataset(state.quizKind).find(x=>x.id===state.currentItemId);
+  addWarning({ itemKind: state.quizKind, itemId: state.currentItemId, itemName: item?item.name:"", timestamp:new Date().toISOString(), awaySeconds });
+  showWarningBanner(awaySeconds);
+}
+function showWarningBanner(awaySeconds){
+  const old = document.querySelector(".warn-banner"); if(old) old.remove();
+  const b = document.createElement("div");
+  b.className = "warn-banner";
+  b.textContent = `CẢNH BÁO — Bạn vừa thoát ra màn hình ứng dụng (${awaySeconds}s) — hành động này đã được ghi nhận`;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(), 4000);
+}
+function startAntiCheat(){ document.addEventListener("visibilitychange", onVisibilityChange); }
+function stopAntiCheat(){ document.removeEventListener("visibilitychange", onVisibilityChange); }
+
+/* ==========================================================================
+   UTIL
+   ========================================================================== */
+function escapeHtml(str){
+  if(str===undefined||str===null) return "";
+  return String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]));
+}
+
+render();
+</script>
+</body>
+</html>
