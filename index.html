@@ -1263,6 +1263,25 @@ function escapeHtml(str){
   return String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]));
 }
 
+  // ==========================================
+// CẤU HÌNH KẾT NỐI GOOGLE SHEETS
+// ==========================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyig3BGfUseDOxcAGuDbnwcfDe234RGWRmvoMmTPnz4wvEH5DO_iHKWzL1ujE0e3NjD/exec"; // Thay link URL thật của bạn vào đây
+
+async function sendDataToSheet(payload) {
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        console.log("Kết quả gửi Sheet:", result);
+    } catch (error) {
+        console.error("Lỗi gửi dữ liệu về Sheet:", error);
+    }
+}
 render();
 </script>
 </body>
