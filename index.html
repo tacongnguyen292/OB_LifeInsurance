@@ -1067,6 +1067,33 @@ function bindQuizEvents(){
   const submitBtn = document.getElementById("btn_submit");
   const progressFill = document.getElementById("quizProgressFill");
 
+  // --- CHÈN TỪ ĐÂY ---
+submitBtn.addEventListener('click', function() {
+    // Lấy lại thông tin item mới nhất tại thời điểm bấm gửi
+    const currentItem = getDataset(state.quizKind)?.find(x => x.id === state.currentItemId);
+
+    // 1. Tính toán điểm số / số câu đúng từ mảng q.answers
+    const answersList = state.quiz?.answers || [];
+    const score = answersList.filter(a => a && a.isCorrect).length;
+    const totalQuestions = state.quiz?.order?.length || 0;
+
+    // 2. Gọi hàm gửi dữ liệu lên Google Sheet
+    sendDataToSheet({
+        classCode: currentClassCode || "OB_HN_01",
+        agentName: currentUser?.name || "Tên học viên",
+        username: currentUser?.cccd || "",
+        dateOfBirth: currentUser?.dob || "",
+        gender: currentUser?.gender || "Nam",
+        type: state?.quizKind === "mock" ? "Đề thi" : "Chủ đề",
+        title: currentItem?.name || (state?.quizKind === "mock" ? "Đề thi" : "Chủ đề 1"),
+        score: score,
+        totalQuestions: totalQuestions,
+        startTime: new Date().toLocaleString("vi-VN"),
+        timeTotal: "0 phút" // Hoặc biến tính thời gian làm bài nếu có
+    });
+});
+// --- KẾT THÚC ĐOẠN CHÈN ---
+  
   function refreshAnsweredUI(){
     const answered = q.answers.filter(a=>a!==null).length;
     answeredCountEl.textContent = `Đã trả lời: ${answered}/${q.order.length}`;
