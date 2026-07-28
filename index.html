@@ -103,9 +103,14 @@
   .app-title{ font-size:11.5px; opacity:.78; margin-top:3px; font-weight:600; letter-spacing:.3px;}
   .export-btn{ background:rgba(255,255,255,.16); border:none; color:#fff; width:34px; height:34px; border-radius:50%;
     font-size:15px; cursor:pointer; flex-shrink:0; }
-  .logout-btn{ background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.4); color:#fff;
-    padding:8px 16px; border-radius:22px; font-size:12.5px; font-weight:800; cursor:pointer; flex-shrink:0;
-    display:flex; align-items:center; gap:6px; letter-spacing:.3px; }
+  .logout-btn{
+    background: var(--maroon-dark); border:none; color:#fff;
+    padding:10px 20px; border-radius:16px; font-size:12.5px; font-weight:800;
+    cursor:pointer; flex-shrink:0; letter-spacing:.4px;
+    box-shadow: 0 3px 0 #5c0f09, 0 5px 10px rgba(0,0,0,.28);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .logout-btn:active{ transform: translateY(2px); box-shadow: 0 1px 0 #5c0f09, 0 2px 5px rgba(0,0,0,.22); }
   .tabbar{ display:flex; gap:6px; margin-top:14px; }
   .tab{ flex:1; text-align:center; padding:10px 4px; font-size:13px; font-weight:700;
     color:rgba(255,255,255,.7); border-bottom:3px solid transparent; cursor:pointer;}
@@ -137,7 +142,7 @@
   .topic-card.locked .topic-badge, .topic-card.empty .topic-badge{ background:var(--lock); }
   .topic-card.passed .topic-badge{ background:var(--success); }
   .topic-info{flex:1; min-width:0;}
-  .topic-info .name{ font-size:14px; font-weight:700; margin:0 0 4px; }
+  .topic-info .name{ font-size:14px; font-weight:700; margin:0 0 4px; text-transform:uppercase; letter-spacing:.2px; }
   .topic-info .meta1{ font-size:11.5px; color:var(--ink-soft); margin-bottom:3px;}
   .topic-info .meta2{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:11px; color:var(--ink-soft); }
   .topic-info .meta2 b{ color:var(--ink); }
@@ -145,14 +150,21 @@
 
   /* ================= QUIZ TAKING (swipe) ================= */
   .quiz-page{ position:fixed; inset:0; z-index:50; background:var(--bg); display:flex; flex-direction:column; }
-  .quiz-header{ background:var(--maroon); color:#fff; padding:12px 14px; flex-shrink:0; }
+  .quiz-header{ background:var(--maroon); color:#fff; padding:14px 14px; flex-shrink:0; }
   .quiz-header-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .exit-btn{ background:rgba(255,255,255,.16); border:none; color:#fff; padding:7px 12px; border-radius:20px;
-    font-size:12.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;}
-  .quiz-title{ font-size:13.5px; font-weight:700; flex:1; text-align:center; padding:0 6px;
+  .exit-btn{
+    background: var(--maroon-dark); border:none; color:#fff;
+    padding:9px 16px; border-radius:14px; font-size:12px; font-weight:800;
+    cursor:pointer; flex-shrink:0; letter-spacing:.4px;
+    box-shadow: 0 3px 0 #5c0f09, 0 5px 9px rgba(0,0,0,.28);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .exit-btn:active{ transform: translateY(2px); box-shadow: 0 1px 0 #5c0f09, 0 2px 4px rgba(0,0,0,.22); }
+  .quiz-title{ font-size:14.5px; font-weight:800; flex:1; text-align:center; padding:0 6px;
+    text-transform:uppercase; letter-spacing:.3px;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .timer{ font-weight:800; font-size:14px; background:rgba(255,255,255,.16); padding:6px 11px; border-radius:20px; flex-shrink:0;}
-  .quiz-progress-track{ height:5px; background:rgba(255,255,255,.25); border-radius:6px; margin-top:10px; overflow:hidden;}
+  .timer{ font-weight:800; font-size:18px; background:rgba(255,255,255,.18); padding:8px 15px; border-radius:14px; flex-shrink:0;}
+  .quiz-progress-track{ height:5px; background:rgba(255,255,255,.25); border-radius:6px; margin-top:12px; overflow:hidden;}
   .quiz-progress-fill{ height:100%; background:#fff; border-radius:6px; transition:width .2s ease;}
 
   .quiz-scroll{ flex:1; overflow-y:auto; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; }
@@ -193,6 +205,8 @@
 
   /* ================= RESULT ================= */
   .result-hero{ text-align:center; padding:26px 10px 6px;}
+  .result-item-name{ font-size:18px; font-weight:800; color:var(--maroon); text-transform:uppercase;
+    letter-spacing:.3px; margin:0 0 18px; line-height:1.35; }
   .result-ring{ width:112px; height:112px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center;
     justify-content:center; font-size:26px; font-weight:800; color:#fff; }
   .result-ring.pass{ background: conic-gradient(var(--success) 0deg, var(--success) calc(var(--pct)*3.6deg), #ddd calc(var(--pct)*3.6deg)); }
@@ -611,7 +625,7 @@ function addWarning(entry){
 
 function studentKey(profile){
   if(!profile) return "";
-  return profile.name.trim().toUpperCase().replace(/\s+/g," ") + "|" + profile.dob + "|" + profile.cccd4;
+  return profile.name.trim().toUpperCase().replace(/\s+/g," ") + "|" + profile.dob + "|" + profile.cccd;
 }
 
 function formatDobVN(iso){
@@ -673,7 +687,7 @@ function render(){
   }
 
   if(state.screen === "result" && state.lastResult){
-    root.innerHTML = renderTopBarSimple() + renderResultScreen();
+    root.innerHTML = renderTopBarSimple(profile) + renderResultScreen();
     bindResultEvents();
     return;
   }
@@ -714,6 +728,15 @@ function renderRegister(){
         </div>
 
         <div class="field">
+          <label>Giới tính <span style="color:var(--danger)">*</span></label>
+          <select id="f_gender">
+            <option value="">-- Chọn giới tính --</option>
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+          </select>
+        </div>
+
+        <div class="field">
           <label>Ngày tháng năm sinh <span style="color:var(--danger)">*</span></label>
           <div class="dob-row">
             <select id="f_dob_d"><option value="">Ngày</option>${dayOpts}</select>
@@ -724,9 +747,8 @@ function renderRegister(){
         </div>
 
         <div class="field">
-          <label>4 số cuối CCCD <span style="color:var(--danger)">*</span></label>
-          <input type="text" id="f_cccd" maxlength="4" inputmode="numeric" placeholder="Ví dụ: 4821">
-          <p class="hint">Chỉ dùng để phân biệt học viên trùng tên, không lưu đầy đủ số CCCD.</p>
+          <label>Số CCCD <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="f_cccd" maxlength="12" inputmode="numeric" placeholder="Ví dụ: 033198000226">
         </div>
 
         <div class="field">
@@ -764,23 +786,24 @@ function bindRegisterEvents(){
     });
   });
   document.getElementById("f_cccd").addEventListener("input", (e)=>{
-    e.target.value = e.target.value.replace(/\D/g,"").slice(0,4);
+    e.target.value = e.target.value.replace(/\D/g,"").slice(0,12);
   });
   document.getElementById("btn_register").onclick = ()=>{
     const name = document.getElementById("f_name").value.trim().toUpperCase();
+    const gender = document.getElementById("f_gender").value;
     const d = document.getElementById("f_dob_d").value;
     const m = document.getElementById("f_dob_m").value;
     const y = document.getElementById("f_dob_y").value;
-    const cccd4 = document.getElementById("f_cccd").value.trim();
+    const cccd = document.getElementById("f_cccd").value.trim();
     const classCode = document.getElementById("f_class").value.trim().toUpperCase();
     const err = document.getElementById("reg_error");
-    if(!name || !d || !m || !y || !/^\d{4}$/.test(cccd4) || !classCode){
+    if(!name || !gender || !d || !m || !y || !/^\d{12}$/.test(cccd) || !classCode){
       err.style.display = "block";
       return;
     }
     err.style.display = "none";
     const dob = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-    const profile = { name, dob, cccd4, classCode, registeredAt: new Date().toISOString() };
+    const profile = { name, gender, dob, cccd, classCode, registeredAt: new Date().toISOString() };
     setProfile(profile);
     getProgress(); getMockProgress();
     syncToSheet("register", {});
@@ -800,7 +823,7 @@ function renderTopBarMain(profile){
         <div class="app-title">Lớp ${escapeHtml(profile.classCode)} · Ôn thi Đại lý Bảo hiểm</div>
       </div>
       <div style="display:flex; gap:8px; flex-shrink:0;">
-        <button class="logout-btn" id="btn_logout" title="Đăng xuất / Đăng ký lại">🚪 ĐĂNG XUẤT</button>
+        <button class="logout-btn" id="btn_logout" title="Đăng xuất / Đăng ký lại">ĐĂNG XUẤT</button>
       </div>
     </div>
     <div class="tabbar">
@@ -809,7 +832,17 @@ function renderTopBarMain(profile){
     </div>
   </div>`;
 }
-function renderTopBarSimple(){ return `<div class="topbar" style="padding-bottom:16px;"><div class="student-name" style="font-size:16px;">Kết quả bài làm</div></div>`; }
+function renderTopBarSimple(profile){
+  return `
+  <div class="topbar" style="padding-bottom:18px;">
+    <div class="topbar-toprow">
+      <div>
+        <div class="student-name">${escapeHtml(profile.name)}</div>
+        <div class="app-title">Lớp ${escapeHtml(profile.classCode)} · Ôn thi Đại lý Bảo hiểm</div>
+      </div>
+    </div>
+  </div>`;
+}
 
 /* ==========================================================================
    LIST SCREEN (dùng chung cho Chủ đề & Đề thi thử)
@@ -1012,7 +1045,7 @@ function renderQuizPage(){
   <div class="quiz-page">
     <div class="quiz-header">
       <div class="quiz-header-row">
-        <button class="exit-btn" id="btn_exit">✕ Thoát</button>
+        <button class="exit-btn" id="btn_exit">THOÁT</button>
         <div class="quiz-title">${escapeHtml(item.name)}</div>
         <div class="timer" id="quizTimer">⏱ ${mm}:${ss}</div>
       </div>
@@ -1049,6 +1082,11 @@ function bindQuizEvents(){
       scrollEl.querySelectorAll(`.opt[data-slide="${slideIdx}"]`).forEach(o=>o.classList.remove("selected"));
       el.classList.add("selected");
       refreshAnsweredUI();
+      // Tự động đẩy lên câu tiếp theo sau khi chọn đáp án (chỉ tiến tới, không tự lùi lại).
+      const nextSlide = scrollEl.querySelector(`.qslide[data-idx="${slideIdx+1}"]`);
+      if(nextSlide){
+        setTimeout(()=>{ nextSlide.scrollIntoView({behavior:"smooth", block:"start"}); }, 320);
+      }
     });
   });
 
@@ -1153,9 +1191,10 @@ function renderResultScreen(){
   let html = `<div class="screen">`;
   html += `
     <div class="result-hero">
+      <p class="result-item-name">${escapeHtml(r.item.name)}</p>
       <div class="result-ring ${r.passed?'pass':'fail'}" style="--pct:${pct}"><div class="inner">${pct}%</div></div>
       <p class="result-title">${r.passed ? "🎉 Đạt yêu cầu!" : "Chưa đạt 80%"}</p>
-      <p class="result-sub">${escapeHtml(r.item.name)} · Đúng ${r.correct}/${r.total} câu ${r.timeUp?"· Hết giờ làm bài":""}${r.kind==='topic' && r.passed ? " · Chủ đề tiếp theo đã được mở khóa" : ""}</p>
+      <p class="result-sub">Đúng ${r.correct}/${r.total} câu ${r.timeUp?"· Hết giờ làm bài":""}${r.kind==='topic' && r.passed ? " · Chủ đề tiếp theo đã được mở khóa" : ""}</p>
       <button class="btn secondary btn-backlist" style="margin-bottom:10px;">${backLabel}</button>
     </div>
     <p class="section-title">Xem lại bài làm</p>`;
