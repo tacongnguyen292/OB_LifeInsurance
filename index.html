@@ -4609,7 +4609,7 @@ const MOCKS_DATA = [
    ========================================================================== */
 const PASS_THRESHOLD = 0.8;
 const EXAM_MINUTES = 60; // thời gian làm bài mặc định cho MỌI chủ đề và đề thi thử (phút)
-const SHEET_WEBHOOK_URL = "";
+const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyqS6fbo35HrnIEKwM6T7R5C5MQxMYCca4almAT1IO6miFMG_2-DZ9KoNDNuK60pjoPOQ/exec";
 // Đường dẫn ảnh nền cho màn hình đăng ký — thay bằng ảnh thật của công ty (ảnh đội ngũ tư vấn/lễ vinh danh...)
 // Đặt file ảnh cùng thư mục với index.html và sửa tên file bên dưới cho khớp.
 const BACKGROUND_IMAGE_URL = "https://images.unsplash.com/photo-1758518731468-98e90ffd7430?fm=jpg&q=70&w=1600&auto=format&fit=crop&ixlib=rb-4.1.0";
@@ -4827,18 +4827,24 @@ function getGradeLabel(score){
    ĐỒNG BỘ GOOGLE SHEET (tùy chọn)
    ========================================================================== */
 function syncToSheet(type, payload){
-  if(!SHEET_WEBHOOK_URL) return;
+  if(!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.includes("PASTE_GOOGLE_APPS_SCRIPT")) return;
   const profile = getProfile();
   const body = Object.assign({
     type, timestamp: new Date().toISOString(),
     studentKey: studentKey(profile),
     name: profile ? profile.name : "",
     dob: profile ? profile.dob : "",
+    gender: profile ? profile.gender : "",
+    cccd: profile ? profile.cccd : "",
     classCode: profile ? profile.classCode : "",
     deviceId: getDeviceId()
   }, payload);
-  fetch(SHEET_WEBHOOK_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"}, body: JSON.stringify(body) })
-    .catch(()=>{});
+  fetch(SHEET_WEBHOOK_URL, {
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"text/plain"},
+    body: JSON.stringify(body)
+  }).catch(()=>{});
 }
 function getDeviceId(){
   let id = localStorage.getItem("iq_device_id");
@@ -5494,7 +5500,20 @@ function finishQuiz(timeUp){
   // kind === "review" (ôn lại câu sai): không ghi nhận điểm/lượt làm, chỉ hiển thị kết quả tham khảo
 
   if(kind!=="review"){
-    syncToSheet("quiz_result", { kind, itemId:item.id, itemName:item.name, score, correct, total, passed, timeUp, warnings:q.warningCount||0 });
+    syncToSheet("quiz_result", {
+      kind,
+      itemId:item.id,
+      itemName:item.name,
+      score,
+      correct,
+      total,
+      passed,
+      timeUp,
+      warnings:q.warningCount||0,
+      attemptNumber,
+      startedAt: q.startedAt || Date.now(),
+      totalTimeMs: Math.max(0, Date.now() - (q.startedAt || Date.now()))
+    });
   }
 
   const startedAt = q.startedAt || Date.now();
