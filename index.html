@@ -4676,7 +4676,7 @@ const LS_MOCK_PROGRESS = "iq_mock_progress_v2";
 const LS_WARNINGS = "iq_warnings_v2";
 const LS_LAST_BADGE_SHOWN = "iq_last_badge_shown_v1"; // bậc danh hiệu cao nhất đã thông báo cho học viên
 const LS_STREAK = "iq_streak_v1"; // { lastDate: "yyyy-mm-dd", count: N }
-const LS_RECENT_HISTORY = "iq_recent_history_v1"; // legacy key, không còn dùng để lưu dữ liệu học tập
+const LS_RECENT_HISTORY = "iq_recent_history_v1";
 const MAX_RECENT_HISTORY = 5;
 const SUMMARY_PDF_URL = "https://drive.google.com/file/d/1nzAh7wveQ0PWOtnw_WDOqja8u8xnxvGK/preview";
 
@@ -4731,7 +4731,19 @@ function todayStr(){
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 }
-// Streak được lưu trên thiết bị học viên bằng localStorage.
+function updateStreak(){
+  const today = todayStr();
+  let s = loadJSON(LS_STREAK, null);
+  if(!s){ s = { lastDate: today, count: 1 }; saveJSON(LS_STREAK, s); return s; }
+  if(s.lastDate === today) return s;
+  const prev = new Date(s.lastDate);
+  const diffDays = Math.round((new Date(today) - prev) / 86400000);
+  s.count = (diffDays === 1) ? (s.count||0) + 1 : 1;
+  s.lastDate = today;
+  saveJSON(LS_STREAK, s);
+  return s;
+}
+function getStreak(){ return loadJSON(LS_STREAK, {lastDate:"", count:0}); }
 
 // ==========================================================================
 // HAPTIC FEEDBACK (rung nhẹ trên điện thoại, bỏ qua nếu không hỗ trợ)
@@ -4792,92 +4804,229 @@ function launchMiniConfetti(){
 }
 
 
-/* ==========================================================================\n   LOCAL STORAGE – DỮ LIỆU HỌC TẬP TRÊN THIẾT BỊ\n   ========================================================================== */
+/* ==========================================================================
+   STORAGE HELPERS
+   ========================================================================== */
 function loadJSON(key, fallback){
-  try{ const v=localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
   catch(e){ return fallback; }
 }
-function saveJSON(key,val){
-  try{ localStorage.setItem(key, JSON.stringify(val)); }
-  catch(e){ console.error("Lỗi lưu dữ liệu",e); }
+function saveJSON(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ console.error("Lỗi lưu dữ liệu", e); }
 }
-function getProfile(){ return loadJSON(LS_PROFILE,null); }
-function setProfile(p){ saveJSON(LS_PROFILE,p); }
-function makeInitialProgress(){
-  const p={};
-  TOPICS_DATA.forEach((t,idx)=>{ p[t.id]={status:idx===0?"unlocked":"locked",bestScore:0,attempts:0,sumScore:0}; });
-  return p;
+function historyStorageKey(){
+  const p = getProfile();
+  if(!p) return LS_RECENT_HISTORY;
+  // Lưu trên thiết bị học viên, nhưng tách theo hồ sơ để không lẫn lịch sử giữa các tài khoản.
+  return LS_RECENT_HISTORY + "_" + btoa(unescape(encodeURIComponent(studentKey(p)))).replace(/[^a-zA-Z0-9]/g, "").slice(0,80);
 }
-function makeInitialMockProgress(){
-  const p={};
-  MOCKS_DATA.forEach(m=>{ p[m.id]={bestScore:0,attempts:0,sumScore:0}; });
-  return p;
-}
-function getProgress(){
-  let p=loadJSON(LS_PROGRESS,null);
-  if(!p){ p=makeInitialProgress(); saveJSON(LS_PROGRESS,p); }
-  TOPICS_DATA.forEach((t,idx)=>{ if(!p[t.id]) p[t.id]={status:idx===0?"unlocked":"locked",bestScore:0,attempts:0,sumScore:0}; });
-  saveJSON(LS_PROGRESS,p);
-  return p;
-}
-function setProgress(p){ saveJSON(LS_PROGRESS,p); }
-function getMockProgress(){
-  let p=loadJSON(LS_MOCK_PROGRESS,null);
-  if(!p){ p=makeInitialMockProgress(); saveJSON(LS_MOCK_PROGRESS,p); }
-  MOCKS_DATA.forEach(m=>{ if(!p[m.id]) p[m.id]={bestScore:0,attempts:0,sumScore:0}; });
-  saveJSON(LS_MOCK_PROGRESS,p);
-  return p;
-}
-function setMockProgress(p){ saveJSON(LS_MOCK_PROGRESS,p); }
-function getWarnings(){ return loadJSON(LS_WARNINGS,[]); }
-function addWarning(entry){ const w=getWarnings(); w.push(entry); saveJSON(LS_WARNINGS,w); syncToSheet("warning",entry); }
-function studentKey(profile){
-  if(!profile) return "";
-  return profile.name.trim().toUpperCase().replace(/\s+/g," ")+"|"+profile.dob+"|"+profile.cccd;
-}
-function formatDobVN(iso){ if(!iso) return ""; const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; }
-function formatStartTime(ts){
-  const parts=new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date(ts));
-  const get=k=>(parts.find(x=>x.type===k)||{}).value||"";
-  return `${get("day")}/${get("month")}/${get("year")} ${get("hour")}h${get("minute")}`;
-}
-function formatDurationVN(ms){ const totalSec=Math.max(0,Math.round(ms/1000)); return `${Math.floor(totalSec/60)} phút ${totalSec%60} giây`; }
-function getGradeLabel(score){ if(score>=0.9)return{label:"EXCELLENT",cls:"excellent"}; if(score>=PASS_THRESHOLD)return{label:"PASS",cls:"pass"}; return{label:"FAIL",cls:"fail"}; }
-
-/* ===================== LOCAL HISTORY (5 LẦN GẦN NHẤT) ===================== */
-function historyLoad(){ return Array.isArray(loadJSON(LS_RECENT_HISTORY,[])) ? loadJSON(LS_RECENT_HISTORY,[]).slice(0,MAX_RECENT_HISTORY) : []; }
-function historySave(arr){ saveJSON(LS_RECENT_HISTORY,Array.isArray(arr)?arr.slice(0,MAX_RECENT_HISTORY):[]); }
+function historyLoad(){ return loadJSON(historyStorageKey(), []); }
+function historySave(arr){ saveJSON(historyStorageKey(), arr.slice(0, MAX_RECENT_HISTORY)); }
 function historyCapture(){
   if(!state || !state.lastResult) return;
-  const r=state.lastResult;
-  if(r.kind!=="topic" && r.kind!=="mock") return;
-  const record=JSON.parse(JSON.stringify({id:"h_"+Date.now()+"_"+Math.random().toString(36).slice(2,8),kind:r.kind,item:r.item,score:r.score,correct:r.correct,total:r.total,passed:r.passed,timeUp:r.timeUp,reviewItems:r.reviewItems||[],attemptNumber:r.attemptNumber,startedAt:r.startedAt,totalTimeMs:r.totalTimeMs,savedAt:Date.now()}));
-  const arr=historyLoad(); arr.unshift(record); historySave(arr);
+  const r = state.lastResult;
+  if(r.kind !== "topic" && r.kind !== "mock") return;
+  const record = JSON.parse(JSON.stringify({
+    id: "h_" + Date.now() + "_" + Math.random().toString(36).slice(2,8),
+    kind:r.kind, item:r.item, score:r.score, correct:r.correct, total:r.total,
+    passed:r.passed, timeUp:r.timeUp, reviewItems:r.reviewItems || [],
+    attemptNumber:r.attemptNumber, startedAt:r.startedAt, totalTimeMs:r.totalTimeMs,
+    savedAt:Date.now()
+  }));
+  const arr=historyLoad();
+  arr.unshift(record);
+  historySave(arr);
 }
-function historyKindLabel(kind){ return kind==="mock" ? "MOF" : "Chủ đề"; }
-
-/* ===================== GOOGLE SHEET – CHỈ ĐỒNG BỘ KẾT QUẢ ===================== */
-function syncToSheet(type,payload){
-  if(!SHEET_WEBHOOK_URL) return;
-  const profile=getProfile();
-  const body=Object.assign({type,timestamp:new Date().toISOString(),studentKey:studentKey(profile),name:profile?profile.name:"",dob:profile?profile.dob:"",gender:profile?profile.gender:"",cccd:profile?profile.cccd:"",classCode:profile?profile.classCode:""},payload);
-  fetch(SHEET_WEBHOOK_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(body)}).catch(()=>{});
+function historyKindLabel(kind){ return kind === "mock" ? "MOF" : "Chủ đề"; }
+function renderUtilityButtons(){
+  return `<div class="utility-actions">
+    <button class="utility-btn" id="btn_summary_pdf" type="button" aria-label="Mở tài liệu PDF">📄 Tài liệu</button>
+    <button class="utility-btn" id="btn_history" type="button" aria-label="Xem lịch sử làm bài">🕘 Lịch sử</button>
+  </div>`;
 }
-
-/* ===================== STREAK ===================== */
-function updateStreak(){
-  const today=todayStr();
-  let s=loadJSON(LS_STREAK,null);
-  if(!s){ s={lastDate:today,count:1}; }
-  else if(s.lastDate!==today){
-    const prev=new Date(s.lastDate),cur=new Date(today);
-    const diffDays=Math.round((cur-prev)/86400000);
-    s.count=(diffDays===1)?(s.count||0)+1:1;
-    s.lastDate=today;
+function bindUtilityButtons(){
+  const pdf=document.getElementById("btn_summary_pdf");
+  if(pdf) pdf.onclick=showSummaryPdf;
+  const history=document.getElementById("btn_history");
+  if(history) history.onclick=showHistoryScreen;
+}
+function showSummaryPdf(){
+  const root=document.getElementById("app");
+  root.innerHTML=`<div class="utility-page">
+    <div class="utility-page-head">
+      <button class="utility-back" id="btn_back_from_pdf" type="button">←</button>
+      <div><div class="utility-title">📚 Tài liệu</div><div class="utility-subtitle">Đọc trực tiếp trên ứng dụng</div></div>
+    </div>
+    <div class="pdf-shell"><iframe src="${SUMMARY_PDF_URL}#toolbar=0&navpanes=0&scrollbar=1" title="Tài liệu" loading="lazy" referrerpolicy="no-referrer"></iframe></div>
+    <div class="pdf-note">Tài liệu được mở trực tiếp trong ứng dụng; giao diện tải xuống/in được hạn chế ở mức trình xem.</div>
+  </div>`;
+  document.getElementById("btn_back_from_pdf").onclick=()=>{ state.screen=null; render(); };
+}
+function showHistoryScreen(){
+  state.screen="history";
+  render();
+}
+function renderHistoryScreen(){
+  const records=historyLoad();
+  let html=`<div class="utility-page">
+    <div class="utility-page-head">
+      <button class="utility-back" id="btn_back_from_history" type="button">←</button>
+      <div><div class="utility-title">🕘 Lịch sử</div><div class="utility-subtitle">5 lần làm bài gần nhất</div></div>
+    </div>`;
+  if(!records.length){
+    html+=`<div class="history-empty"><div class="history-empty-icon">📝</div><div class="history-empty-title">Chưa có lịch sử làm bài</div><div class="history-empty-sub">Các bài hoàn thành sẽ được lưu trên thiết bị này.</div></div>`;
+  } else {
+    html+=`<div class="history-list">`;
+    records.forEach((r,i)=>{
+      const pct=Math.round((r.score||0)*100), grade=getGradeLabel(r.score||0);
+      html+=`<div class="history-card">
+        <div class="history-index">${i+1}</div><div class="history-main">
+          <div class="history-kind">${historyKindLabel(r.kind)}</div>
+          <div class="history-name">${escapeHtml(r.item&&r.item.name||"")}</div>
+          <div class="history-meta"><span class="history-score">${r.correct}/${r.total}</span><span>${pct}%</span><span>${escapeHtml(grade.label)}</span><span>🕒 ${formatStartTime(r.startedAt)}</span><span>⏱ ${formatDurationVN(r.totalTimeMs)}</span></div>
+          <button class="history-action" type="button" data-history-id="${escapeHtml(r.id)}">Xem chi tiết</button>
+        </div></div>`;
+    });
+    html+=`</div>`;
   }
-  saveJSON(LS_STREAK,s); return s;
+  html+=`</div>`;
+  const root=document.getElementById("app"); root.innerHTML=html;
+  document.getElementById("btn_back_from_history").onclick=()=>{ state.screen=null; render(); };
+  document.querySelectorAll("[data-history-id]").forEach(btn=>btn.onclick=()=>showHistoryDetail(btn.getAttribute("data-history-id")));
 }
-function getStreak(){ return loadJSON(LS_STREAK,{lastDate:"",count:0}); }
+function showHistoryDetail(id){
+  const record=historyLoad().find(r=>r.id===id);
+  if(!record) return;
+  const root=document.getElementById("app");
+  const pct=Math.round((record.score||0)*100), grade=getGradeLabel(record.score||0);
+  let html=`<div class="utility-page">
+    <div class="utility-page-head"><button class="utility-back" id="btn_back_history_list" type="button">←</button><div><div class="utility-title">Chi tiết kết quả</div><div class="utility-subtitle">${historyKindLabel(record.kind)}</div></div></div>
+    <div class="history-result-hero"><div class="history-result-name">${escapeHtml(record.item&&record.item.name||"")}</div><div class="history-result-score">${record.correct}/${record.total}</div><div class="history-result-percent">${pct}% chính xác</div><span class="result-grade ${grade.cls}">${grade.label}</span><div class="history-result-extra"><span>Attempt: <b>${record.attemptNumber}</b></span><span>Start Time: <b>${formatStartTime(record.startedAt)}</b></span><span>Total Time: <b>${formatDurationVN(record.totalTimeMs)}</b></span></div></div>
+    <p class="section-title">Xem lại bài làm</p>`;
+  (record.reviewItems||[]).forEach((it,idx)=>{
+    let optsHtml="";
+    (it.options||[]).forEach((opt,oi)=>{ const label=String.fromCharCode(65+oi); let cls="opt review-opt"; if(oi===it.answer) cls+=" correct"; else if(oi===it.chosen) cls+=" incorrect"; optsHtml+=`<div class="${cls}"><div class="dot">${label}</div><div>${escapeHtml(opt)}</div></div>`; });
+    html+=`<div class="review-item"><span class="review-tag ${it.isCorrect?'ok':'bad'}">${it.isCorrect?'Đúng':'Sai'}</span><p class="review-q">Câu ${idx+1}: ${escapeHtml(it.q)}</p><div style="margin-bottom:8px;">${optsHtml}</div>${it.chosen===null?`<p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 8px;"><i>Chưa trả lời</i></p>`:""}<div class="explain-box"><b>Giải thích:</b> ${escapeHtml(it.explain)}</div></div>`;
+  });
+  html+=`<button class="btn" id="btn_back_history_list_bottom" style="margin-top:6px;">← Quay lại lịch sử</button></div>`;
+  root.innerHTML=html;
+  document.getElementById("btn_back_history_list").onclick=showHistoryScreen;
+  document.getElementById("btn_back_history_list_bottom").onclick=showHistoryScreen;
+}
+
+function getProfile(){ return loadJSON(LS_PROFILE, null); }
+function setProfile(p){ saveJSON(LS_PROFILE, p); }
+
+function getProgress(){
+  let p = loadJSON(LS_PROGRESS, null);
+  if(!p){
+    p = {};
+    TOPICS_DATA.forEach((t, idx)=>{
+      p[t.id] = { status: idx===0 ? "unlocked" : "locked", bestScore:0, attempts:0, sumScore:0 };
+    });
+    saveJSON(LS_PROGRESS, p);
+  }
+  TOPICS_DATA.forEach((t,idx)=>{ if(!p[t.id]) p[t.id] = { status: idx===0?"unlocked":"locked", bestScore:0, attempts:0, sumScore:0 }; });
+  return p;
+}
+function setProgress(p){ saveJSON(LS_PROGRESS, p); }
+
+function getMockProgress(){
+  let p = loadJSON(LS_MOCK_PROGRESS, null);
+  if(!p){
+    p = {};
+    MOCKS_DATA.forEach(m=>{ p[m.id] = { bestScore:0, attempts:0, sumScore:0 }; });
+    saveJSON(LS_MOCK_PROGRESS, p);
+  }
+  MOCKS_DATA.forEach(m=>{ if(!p[m.id]) p[m.id] = { bestScore:0, attempts:0, sumScore:0 }; });
+  return p;
+}
+function setMockProgress(p){ saveJSON(LS_MOCK_PROGRESS, p); }
+
+function getWarnings(){ return loadJSON(LS_WARNINGS, []); }
+function addWarning(entry){
+  const w = getWarnings(); w.push(entry); saveJSON(LS_WARNINGS, w);
+  syncToSheet("warning", entry);
+}
+
+function studentKey(profile){
+  if(!profile) return "";
+  return profile.name.trim().toUpperCase().replace(/\s+/g," ") + "|" + profile.dob + "|" + profile.cccd;
+}
+
+function formatDobVN(iso){
+  if(!iso) return "";
+  const [y,m,d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+function formatStartTime(ts){
+  const d = new Date(ts);
+  const dd = String(d.getDate()).padStart(2,"0");
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const yyyy = d.getFullYear();
+  const hh = String(d.getHours()).padStart(2,"0");
+  const min = String(d.getMinutes()).padStart(2,"0");
+  return `${dd}/${mm}/${yyyy} ${hh}h${min}`;
+}
+function formatDurationVN(ms){
+  const totalSec = Math.max(0, Math.round(ms/1000));
+  const mins = Math.floor(totalSec/60);
+  const secs = totalSec%60;
+  return `${mins} phút ${secs} giây`;
+}
+function getGradeLabel(score){
+  if(score >= 0.9) return {label:"EXCELLENT", cls:"excellent"};
+  if(score >= PASS_THRESHOLD) return {label:"PASS", cls:"pass"};
+  return {label:"FAIL", cls:"fail"};
+}
+
+/* ==========================================================================
+   ĐỒNG BỘ GOOGLE SHEET (tùy chọn)
+   ========================================================================== */
+function syncToSheet(type, payload){
+  if(!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.includes("PASTE_GOOGLE_APPS_SCRIPT")) return;
+  const profile = getProfile();
+  const body = Object.assign({
+    type, timestamp: new Date().toISOString(),
+    studentKey: studentKey(profile),
+    name: profile ? profile.name : "",
+    dob: profile ? profile.dob : "",
+    gender: profile ? profile.gender : "",
+    cccd: profile ? profile.cccd : "",
+    classCode: profile ? profile.classCode : "",
+    deviceId: getDeviceId()
+  }, payload);
+  fetch(SHEET_WEBHOOK_URL, {
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"text/plain"},
+    body: JSON.stringify(body)
+  }).catch(()=>{});
+}
+function getDeviceId(){
+  let id = localStorage.getItem("iq_device_id");
+  if(!id){ id = "dev_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36); localStorage.setItem("iq_device_id", id); }
+  return id;
+}
+
+/* ==========================================================================
+   STATE
+   ========================================================================== */
+let state = {
+  screen: "loading",
+  activeTab: "topics",     // topics | mocks
+  quizKind: null,          // "topic" | "mock"
+  currentItemId: null,
+  quiz: null,
+  lastResult: null
+};
+let _streakChecked = false;
+
+function getDataset(kind){ return kind==="mock" ? MOCKS_DATA : TOPICS_DATA; }
+function getQuizItem(){
+  if(state.quizKind === "review" && state.reviewItem) return state.reviewItem;
+  return getDataset(state.quizKind).find(x=>x.id===state.currentItemId);
+}
 
 /* ==========================================================================
    RENDER ROOT
@@ -4937,7 +5086,7 @@ function renderRegister(){
       </div>
       <div class="reg-card">
         <p class="reg-title">Thông tin học viên</p>
-        <p class="reg-sub">Vui lòng nhập chính xác thông tin bên dưới. Dữ liệu học tập được lưu trên hệ thống để bạn có thể tiếp tục trên thiết bị hoặc trình duyệt khác.</p>
+        <p class="reg-sub">Vui lòng nhập chính xác thông tin bên dưới. Dữ liệu được lưu ngay trên thiết bị này để theo dõi tiến trình ôn luyện của bạn.</p>
 
         <div class="field">
           <label>Họ và tên <span style="color:var(--danger)">*</span></label>
@@ -5006,27 +5155,30 @@ function bindRegisterEvents(){
     e.target.value = e.target.value.replace(/\D/g,"").slice(0,12);
   });
   document.getElementById("btn_register").onclick = ()=>{
-    const btn=document.getElementById("btn_register");
-    const name=document.getElementById("f_name").value.trim().toUpperCase();
-    const gender=document.getElementById("f_gender").value;
-    const d=document.getElementById("f_dob_d").value;
-    const m=document.getElementById("f_dob_m").value;
-    const y=document.getElementById("f_dob_y").value;
-    const cccd=document.getElementById("f_cccd").value.trim();
-    const classCode=document.getElementById("f_class").value.trim().toUpperCase();
-    const err=document.getElementById("reg_error");
-    if(!name||!gender||!d||!m||!y||!/^[0-9]{12}$/.test(cccd)||!classCode){ err.style.display="block"; return; }
-    err.style.display="none";
-    btn.disabled=true; btn.textContent="Đang vào app...";
-    const dob=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-    const profile={name,gender,dob,cccd,classCode,registeredAt:new Date().toISOString()};
+    const name = document.getElementById("f_name").value.trim().toUpperCase();
+    const gender = document.getElementById("f_gender").value;
+    const d = document.getElementById("f_dob_d").value;
+    const m = document.getElementById("f_dob_m").value;
+    const y = document.getElementById("f_dob_y").value;
+    const cccd = document.getElementById("f_cccd").value.trim();
+    const classCode = document.getElementById("f_class").value.trim().toUpperCase();
+    const err = document.getElementById("reg_error");
+    if(!name || !gender || !d || !m || !y || !/^\d{12}$/.test(cccd) || !classCode){
+      err.style.display = "block";
+      return;
+    }
+    err.style.display = "none";
+    const dob = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const profile = { name, gender, dob, cccd, classCode, registeredAt: new Date().toISOString() };
     setProfile(profile);
     getProgress(); getMockProgress();
-    localStorage.setItem(LS_LAST_BADGE_SHOWN,"0");
+    localStorage.setItem(LS_LAST_BADGE_SHOWN, "0");
     updateStreak();
-    syncToSheet("register",{});
+    syncToSheet("register", {});
     render();
-    setTimeout(()=>showWelcomePopup("🛡️",name),300);
+    setTimeout(()=>{
+      showWelcomePopup("🛡️", name);
+    }, 300);
   };
 }
 
@@ -5117,7 +5269,7 @@ function renderListScreen(kind){
     html += `<button class="logout-btn" id="btn_logout" title="Đăng xuất / Đăng ký lại" style="width:100%; margin-top:6px;">ĐĂNG XUẤT</button>`;
   }
 
-  html += `<p class="cloud-note">☁️ Dữ liệu học tập được lưu trên thiết bị này</p>`;
+  html += `<p class="cloud-note">☁️ Dữ liệu học tập đã được lưu an toàn trên thiết bị này</p>`;
   html += `</div>`;
   return html;
 }
@@ -5255,15 +5407,15 @@ function showAchievementPopup(icon, title, quote, message){
 }
 
 function checkAndShowBadgePopup(){
-  const currentTier=computeBadgeTierIndex();
-  const lastShown=Number(localStorage.getItem(LS_LAST_BADGE_SHOWN)||"0");
-  if(currentTier>lastShown && currentTier>=1){
+  const currentTier = computeBadgeTierIndex();
+  const lastShown = parseInt(localStorage.getItem(LS_LAST_BADGE_SHOWN) || "0", 10);
+  if(currentTier > lastShown && currentTier >= 1){
     const tierKey = BADGE_TIERS[currentTier].key;
     const content = BADGE_POPUP_CONTENT[tierKey];
     if(content){
       showAchievementPopup(renderBadgeIconHtml(BADGE_TIERS[currentTier]), content.title, content.quote, content.message);
     }
-    localStorage.setItem(LS_LAST_BADGE_SHOWN,String(currentTier));
+    localStorage.setItem(LS_LAST_BADGE_SHOWN, String(currentTier));
   }
 }
 
@@ -5283,16 +5435,16 @@ function showLogoutConfirm(){
   document.body.appendChild(div);
   document.getElementById("modal_logout_cancel").onclick = ()=> div.remove();
   document.getElementById("modal_logout_confirm").onclick = ()=>{
-    div.remove();
     localStorage.removeItem(LS_PROFILE);
     localStorage.removeItem(LS_PROGRESS);
     localStorage.removeItem(LS_MOCK_PROGRESS);
     localStorage.removeItem(LS_WARNINGS);
     localStorage.removeItem(LS_LAST_BADGE_SHOWN);
     localStorage.removeItem(LS_STREAK);
-    localStorage.removeItem(LS_RECENT_HISTORY);
-    state={screen:"loading",activeTab:"topics",quizKind:null,currentItemId:null,quiz:null,lastResult:null};
-    _streakChecked=false;
+    try{ localStorage.removeItem(historyStorageKey()); }catch(e){}
+    div.remove();
+    state = { screen:"loading", activeTab:"topics", quizKind:null, currentItemId:null, quiz:null, lastResult:null };
+    _streakChecked = false;
     render();
   };
 }
