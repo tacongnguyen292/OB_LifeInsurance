@@ -2245,7 +2245,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây sai:",
         options: ["Bên mua bảo hiểm là tổ chức, cá nhân giao kết hợp đồng bảo hiểm với doanh nghiệp bảo hiểm và đóng phí bảo hiểm.", "Bên mua bảo hiểm phải có quyền lợi có thể được bảo hiểm phù hợp với từng loại hợp đồng bảo hiểm theo quy định của Luật Kinh doanh bảo hiểm.", "Bên mua bảo hiểm là cá nhân được người thụ hưởng chỉ định để đóng phí bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm.", "Bên mua bảo hiểm có quyền lựa chọn doanh nghiệp bảo hiểm để giao kết hợp đồng bảo hiểm."],
         answer: 2,
-        explain: "Phát biểu C sai vì tổ chức, cá nhân tại Việt Nam chỉ được tham gia bảo hiểm tại doanh nghiệp bảo hiểm được cấp phép hoạt động tại Việt Nam (trừ trường hợp bảo hiểm qua biên giới), không được tự do tham gia bất kỳ doanh nghiệp bảo hiểm nước ngoài nào.*",
+        explain: "Bên mua bảo hiểm là chủ thể tự mình giao kết hợp đồng và phải có quyền lợi có thể được bảo hiểm, không phải là người do người thụ hưởng chỉ định để đóng phí. Do đó phát biểu C không đúng với khái niệm bên mua bảo hiểm theo luật - đây chính là phát biểu SAI cần tìm.",
       },
       {
         q: "Trong thời hạn bảo hiểm của hợp đồng bảo hiểm sức khỏe với quyền lợi bảo hiểm tai nạn, người được bảo hiểm không may bị tai nạn dẫn đến thương tật khi tham gia hoạt động nhảy dù. Trường hợp này, doanh nghiệp bảo hiểm sẽ chi trả cho người được bảo hiểm số tiền nào sau đây:",
@@ -2305,7 +2305,7 @@ const MOCKS_DATA = [
         q: "Theo pháp luật Việt Nam về kinh doanh bảo hiểm, hợp đồng bảo hiểm vô hiệu trong trường hợp nào sau đây?",
         options: ["Người được bảo hiểm đồng ý bằng văn bản cho bên mua bảo hiểm mua bảo hiểm sức khỏe cho mình.", "Bên mua bảo hiểm là người chưa thành niên.", "Bên mua bảo hiểm mua bảo hiểm nhân thọ cho cha, mẹ của mình.", "Bên mua bảo hiểm mua bảo hiểm cho người có quan hệ lao động với bên mua bảo hiểm."],
         answer: 1,
-        explain: "Hợp đồng bảo hiểm vô hiệu khi tại thời điểm giao kết không có đối tượng bảo hiểm hoặc bên mua bảo hiểm không có quyền lợi có thể được bảo hiểm; trường hợp bên mua bảo hiểm không biết sự kiện bảo hiểm đã xảy ra (nhưng thực tế đã xảy ra) không đương nhiên làm hợp đồng vô hiệu theo quy định này.*",
+        explain: "Theo quy định của Bộ luật Dân sự (được Luật Kinh doanh bảo hiểm dẫn chiếu áp dụng), bên mua bảo hiểm phải có năng lực hành vi dân sự đầy đủ để tự mình giao kết hợp đồng; giao dịch dân sự do người chưa thành niên xác lập mà không thông qua người đại diện theo pháp luật có thể bị vô hiệu. Do đó, trường hợp bên mua bảo hiểm là người chưa thành niên (đáp án B) làm hợp đồng bảo hiểm vô hiệu; còn các phương án A, C, D đều là căn cứ hợp pháp, đúng đắn về quyền lợi có thể được bảo hiểm, không phải căn cứ làm hợp đồng vô hiệu.",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây đúng về điều khoản loại trừ trách nhiệm bảo hiểm:",
@@ -2389,7 +2389,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, trong hợp đồng bảo hiểm nhân thọ, doanh nghiệp bảo hiểm không phải bồi thường, trả tiền bảo hiểm trong các trường hợp nào sau đây:",
         options: ["Người được bảo hiểm chết do tự tử trong thời hạn 02 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực.", "Người được bảo hiểm chết do tự tử trong thời hạn 03 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực.", "Người được bảo hiểm chết do tự tử trong thời hạn 04 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực."],
         answer: 0,
-        explain: "Trong ba tình huống nêu ra, chỉ có trường hợp C (chi trả cho những người thụ hưởng khác không liên quan đến hành vi cố ý gây thiệt hại) là trường hợp doanh nghiệp bảo hiểm phải bồi thường; hai trường hợp A, B thuộc diện loại trừ trách nhiệm bảo hiểm.*",
+        explain: "Theo Luật Kinh doanh bảo hiểm 2022, doanh nghiệp bảo hiểm không phải bồi thường, trả tiền bảo hiểm nếu người được bảo hiểm chết do tự tử trong thời hạn 02 năm kể từ ngày nộp phí bảo hiểm đầu tiên hoặc kể từ ngày hợp đồng bảo hiểm khôi phục hiệu lực (đáp án A); mốc thời gian này được luật quy định cố định là 02 năm, không phải 03 năm hay 04 năm như các phương án B, C.",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, chọn phương án đúng nhất về sự kiện bảo hiểm:",
@@ -2545,7 +2545,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây sai về quyền và nghĩa vụ của doanh nghiệp bảo hiểm:",
         options: ["Yêu cầu bên mua bảo hiểm áp dụng các biện pháp đề phòng, hạn chế tổn thất theo quy định của pháp luật.", "Yêu cầu người thứ ba bồi hoàn số tiền mà doanh nghiệp bảo hiểm đã bồi thường cho người được bảo hiểm đối với thiệt hại về tài sản; lợi ích kinh tế hoặc nghĩa vụ thực hiện hợp đồng hoặc nghĩa vụ theo pháp luật; trách nhiệm dân sự do người thứ ba gây ra", "Chuyển giao hợp đồng bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm hoặc theo quy định của pháp luật.", "Lưu trữ hồ sơ theo quy định của pháp luật"],
         answer: 2,
-        explain: "Phát biểu C sai vì doanh nghiệp bảo hiểm chỉ không được áp dụng loại trừ về chậm thông báo trong trường hợp bất khả kháng hoặc trở ngại khách quan, chứ không phải trong mọi trường hợp.*",
+        explain: "Chuyển giao hợp đồng bảo hiểm là quyền của bên mua bảo hiểm, không phải là quyền hay nghĩa vụ của doanh nghiệp bảo hiểm; do đó phát biểu C là phát biểu SAI cần tìm. Các phương án A (yêu cầu bên mua bảo hiểm áp dụng biện pháp đề phòng, hạn chế tổn thất), B (yêu cầu người thứ ba bồi hoàn) và D (lưu trữ hồ sơ) đều là các quyền, nghĩa vụ hợp pháp của doanh nghiệp bảo hiểm theo Luật Kinh doanh bảo hiểm.",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, các loại hợp đồng bảo hiểm bao gồm:",
@@ -2653,7 +2653,7 @@ const MOCKS_DATA = [
         q: "Ngày 28/02/2000, chị C tham gia hợp đồng bảo hiểm liên kết chung có thời hạn 50 năm với số phí đóng định kỳ hàng năm là 100 triệu đồng, phí đóng thêm năm đầu là 500 triệu đồng. Ngày 01/3/2000, chị C đóng thêm 100 triệu đồng phí đóng thêm. Hợp đồng bảo hiểm liên kết chung có tỷ lệ phí ban đầu quy định như sau: Tỷ lệ phí ban đầu/phí bảo hiểm cơ bản năm theo năm đóng phí lần lượt là: năm 1 là 50%, năm 2 là 30%, năm 3 là 20%, năm 4 là 10%, từ năm thứ 5 đến năm thứ 10 là 2%. Tỷ lệ phí ban đầu/phí đóng thêm theo năm đóng phí lần lượt là: từ năm thứ nhất đến năm thứ 4 là 2%, từ năm thứ 5 đến năm thứ 10 là 0%. Phí bảo hiểm rủi ro của hợp đồng là 260 nghìn đồng/tháng. Phí quản lý hợp đồng là 40 nghìn đồng/tháng (các khoản phí được khấu trừ vào ngày hiệu lực hợp đồng và ngày kỷ niệm tháng hợp đồng). Lãi suất đầu tư của quỹ liên kết chung được công ty công bố cho Quý 1 năm 2000 là 12%/năm. Giá trị tài khoản hợp đồng của chị C tại ngày 02/4/2000 là:",
         options: ["540 triệu đồng.", "700 triệu đồng.", "544,797 triệu đồng.", "637,66 triệu đồng."],
         answer: 2,
-        explain: "- Theo quy định pháp luật về sản phẩm liên kết chung (Thông tư 52/2012/TT-BTC, nay theo Thông tư 67/2023/TT-BTC), tổng phí đóng thêm trong một năm hợp đồng không vượt quá 5 lần phí bảo hiểm cơ bản. - Phí cơ bản = 100 triệu => Hạn mức phí đóng thêm tối đa trong năm 1 = 500 triệu đồng. - Ngày 28/02/2000 chị C đã đóng 500 triệu phí đóng thêm (đã đạt trần). Do đó khoản 100 triệu nộp ngày 01/3/2000 vượt quá giới hạn cho phép nên không được phân bổ vào Giá trị tài khoản hợp đồng (coi như phí treo/chờ xử lý). - Do đó, diễn biến GTTK vẫn giống như Câu 24, đạt 544,797 triệu đồng tại ngày 02/04/2000.*",
+        explain: "Do tổng phí đóng thêm trong năm hợp đồng không được vượt quá 5 lần phí bảo hiểm cơ bản năm (5 × 100 triệu = 500 triệu đồng), khoản phí đóng thêm 500 triệu đồng chị C đã đóng ngày 28/02/2000 đã đạt trần cho phép; do đó khoản 100 triệu đồng đóng thêm ngày 01/3/2000 vượt hạn mức và không được phân bổ vào giá trị tài khoản hợp đồng. Diễn biến giá trị tài khoản (GTTK) như sau: - Ngày 28/02/2000 (ngày hiệu lực hợp đồng): phí cơ bản 100 triệu trừ phí ban đầu năm 1 (50%) còn 50 triệu vào tài khoản; phí đóng thêm hợp lệ 500 triệu trừ phí ban đầu (2%) còn 490 triệu vào tài khoản; sau đó trừ phí bảo hiểm rủi ro và phí quản lý hợp đồng tháng đầu (0,26 + 0,04 triệu) => GTTK = 50 + 490 - 0,3 = 539,7 triệu đồng. - Ngày 28/3/2000 (ngày kỷ niệm tháng): GTTK được cộng lãi đầu tư 1 tháng theo lãi suất 12%/năm (~1%/tháng): 539,7 × 1,01 = 545,097 triệu đồng; sau đó trừ tiếp phí bảo hiểm rủi ro và phí quản lý hợp đồng tháng 2 (0,3 triệu) => GTTK = 545,097 - 0,3 = 544,797 triệu đồng. - Từ 28/3/2000 đến 02/4/2000 chưa đến ngày kỷ niệm tháng tiếp theo (28/4/2000) nên không phát sinh thêm giao dịch khấu trừ phí hay cộng lãi. Do đó, giá trị tài khoản hợp đồng tại ngày 02/4/2000 vẫn là 544,797 triệu đồng (đáp án C).",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây đúng về điều khoản loại trừ trách nhiệm bảo hiểm:",
@@ -3205,7 +3205,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây sai về quyền và nghĩa vụ của doanh nghiệp bảo hiểm:",
         options: ["Yêu cầu bên mua bảo hiểm áp dụng các biện pháp đề phòng, hạn chế tổn thất theo quy định của pháp luật.", "Yêu cầu người thứ ba bồi hoàn số tiền mà doanh nghiệp bảo hiểm đã bồi thường cho người được bảo hiểm đối với thiệt hại về tài sản; lợi ích kinh tế hoặc nghĩa vụ thực hiện hợp đồng hoặc nghĩa vụ theo pháp luật; trách nhiệm dân sự do người thứ ba gây ra", "Chuyển giao hợp đồng bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm hoặc theo quy định của pháp luật.", "Lưu trữ hồ sơ theo quy định của pháp luật"],
         answer: 2,
-        explain: "Phát biểu C sai vì doanh nghiệp bảo hiểm chỉ không được áp dụng loại trừ về chậm thông báo trong trường hợp bất khả kháng hoặc trở ngại khách quan, chứ không phải trong mọi trường hợp.*",
+        explain: "Chuyển giao hợp đồng bảo hiểm là quyền của bên mua bảo hiểm, không phải là quyền hay nghĩa vụ của doanh nghiệp bảo hiểm; do đó phát biểu C là phát biểu SAI cần tìm. Các phương án A (yêu cầu bên mua bảo hiểm áp dụng biện pháp đề phòng, hạn chế tổn thất), B (yêu cầu người thứ ba bồi hoàn) và D (lưu trữ hồ sơ) đều là các quyền, nghĩa vụ hợp pháp của doanh nghiệp bảo hiểm theo Luật Kinh doanh bảo hiểm.",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, trong hoạt động đại lý bảo hiểm doanh nghiệp bảo hiểm có quyền:",
@@ -3241,7 +3241,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây sai:",
         options: ["Bên mua bảo hiểm là tổ chức, cá nhân giao kết hợp đồng bảo hiểm với doanh nghiệp bảo hiểm và đóng phí bảo hiểm.", "Bên mua bảo hiểm phải có quyền lợi có thể được bảo hiểm phù hợp với từng loại hợp đồng bảo hiểm theo quy định của Luật Kinh doanh bảo hiểm.", "Bên mua bảo hiểm là cá nhân được người thụ hưởng chỉ định để đóng phí bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm.", "Bên mua bảo hiểm có quyền lựa chọn doanh nghiệp bảo hiểm để giao kết hợp đồng bảo hiểm."],
         answer: 2,
-        explain: "Phát biểu C sai vì tổ chức, cá nhân tại Việt Nam chỉ được tham gia bảo hiểm tại doanh nghiệp bảo hiểm được cấp phép hoạt động tại Việt Nam (trừ trường hợp bảo hiểm qua biên giới), không được tự do tham gia bất kỳ doanh nghiệp bảo hiểm nước ngoài nào.*",
+        explain: "Bên mua bảo hiểm là chủ thể tự mình giao kết hợp đồng và phải có quyền lợi có thể được bảo hiểm, không phải là người do người thụ hưởng chỉ định để đóng phí. Do đó phát biểu C không đúng với khái niệm bên mua bảo hiểm theo luật - đây chính là phát biểu SAI cần tìm.",
       },
       {
         q: "Luật Kinh doanh bảo hiểm phân loại hợp đồng bảo hiểm theo tiêu chí nào:",
@@ -3301,7 +3301,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, trong hợp đồng bảo hiểm nhân thọ, doanh nghiệp bảo hiểm không phải bồi thường, trả tiền bảo hiểm trong các trường hợp nào sau đây:",
         options: ["Người được bảo hiểm chết do tự tử trong thời hạn 02 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực.", "Người được bảo hiểm chết do tự tử trong thời hạn 03 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực.", "Người được bảo hiểm chết do tự tử trong thời hạn 04 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực."],
         answer: 0,
-        explain: "Trong ba tình huống nêu ra, chỉ có trường hợp C (chi trả cho những người thụ hưởng khác không liên quan đến hành vi cố ý gây thiệt hại) là trường hợp doanh nghiệp bảo hiểm phải bồi thường; hai trường hợp A, B thuộc diện loại trừ trách nhiệm bảo hiểm.*",
+        explain: "Theo Luật Kinh doanh bảo hiểm 2022, doanh nghiệp bảo hiểm không phải bồi thường, trả tiền bảo hiểm nếu người được bảo hiểm chết do tự tử trong thời hạn 02 năm kể từ ngày nộp phí bảo hiểm đầu tiên hoặc kể từ ngày hợp đồng bảo hiểm khôi phục hiệu lực (đáp án A); mốc thời gian này được luật quy định cố định là 02 năm, không phải 03 năm hay 04 năm như các phương án B, C.",
       },
       {
         q: "Chọn phương án đúng về quyền, nghĩa vụ của doanh nghiệp bảo hiểm:",
@@ -3619,7 +3619,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, trong hợp đồng bảo hiểm nhân thọ, doanh nghiệp bảo hiểm không phải bồi thường, trả tiền bảo hiểm trong các trường hợp nào sau đây:",
         options: ["Người được bảo hiểm chết do tự tử trong thời hạn 02 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực.", "Người được bảo hiểm chết do tự tử trong thời hạn 03 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực.", "Người được bảo hiểm chết do tự tử trong thời hạn 04 năm kế từ ngày nộp khoản phí bảo hiểm đầu tiên hoặc kế từ ngày hợp đồng bảo hiểm khôi phục hiệu lực."],
         answer: 0,
-        explain: "Trong ba tình huống nêu ra, chỉ có trường hợp C (chi trả cho những người thụ hưởng khác không liên quan đến hành vi cố ý gây thiệt hại) là trường hợp doanh nghiệp bảo hiểm phải bồi thường; hai trường hợp A, B thuộc diện loại trừ trách nhiệm bảo hiểm.*",
+        explain: "Theo Luật Kinh doanh bảo hiểm 2022, doanh nghiệp bảo hiểm không phải bồi thường, trả tiền bảo hiểm nếu người được bảo hiểm chết do tự tử trong thời hạn 02 năm kể từ ngày nộp phí bảo hiểm đầu tiên hoặc kể từ ngày hợp đồng bảo hiểm khôi phục hiệu lực (đáp án A); mốc thời gian này được luật quy định cố định là 02 năm, không phải 03 năm hay 04 năm như các phương án B, C.",
       },
       {
         q: "Chọn phương án sai:",
@@ -4111,7 +4111,7 @@ const MOCKS_DATA = [
         q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây sai về quyền > và nghĩa vụ của doanh nghiệp bảo hiểm:",
         options: ["Yêu cầu bên mua bảo hiểm áp dụng các biện pháp đề phòng, hạn chế tổn thất theo quy định của pháp luật.", "Yêu cầu người thứ ba bồi hoàn số tiền mà doanh nghiệp bảo hiểm đã bồi thường cho người được bảo hiểm đối với thiệt hại về tài sản; lợi ích kinh tế hoặc nghĩa vụ thực hiện hợp đồng hoặc nghĩa vụ theo pháp luật; trách nhiệm dân sự do người thứ ba gây ra", "Chuyển giao hợp đồng bảo hiểm theo thỏa thuận trong hợp đồng bảo hiểm hoặc theo quy định của pháp luật.", "Lưu trữ hồ sơ theo quy định của pháp luật"],
         answer: 2,
-        explain: "Phát biểu C sai vì doanh nghiệp bảo hiểm chỉ không được áp dụng loại trừ về chậm thông báo trong trường hợp bất khả kháng hoặc trở ngại khách quan, chứ không phải trong mọi trường hợp.*",
+        explain: "Chuyển giao hợp đồng bảo hiểm là quyền của bên mua bảo hiểm, không phải là quyền hay nghĩa vụ của doanh nghiệp bảo hiểm; do đó phát biểu C là phát biểu SAI cần tìm. Các phương án A (yêu cầu bên mua bảo hiểm áp dụng biện pháp đề phòng, hạn chế tổn thất), B (yêu cầu người thứ ba bồi hoàn) và D (lưu trữ hồ sơ) đều là các quyền, nghĩa vụ hợp pháp của doanh nghiệp bảo hiểm theo Luật Kinh doanh bảo hiểm.",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, bên mua bảo hiểm có thể đóng phí > bảo hiểm nhân thọ theo cách:",
@@ -4267,7 +4267,7 @@ const MOCKS_DATA = [
         q: "Ngày 28/02/2000, chị C tham gia hợp đồng bảo hiểm liên kết chung có thời hạn 50 năm với số phí đóng định kỳ hàng năm là 100 triệu đồng, phí đóng thêm năm đầu là 500 triệu đồng. Ngày 01/3/2000, chị C đóng thêm 100 triệu đồng phí đóng thêm. Hợp đồng bảo hiểm liên kết chung có tỷ lệ phí ban đầu quy định như sau: Tỷ lệ phí ban đầu/phí bảo hiểm cơ bản năm theo năm đóng phí lần lượt là: năm 1 là 50%, năm 2 là 30%, năm 3 là 20%, năm 4 là 10%, từ năm thứ 5 đến năm thứ 10 là 2%. Tỷ lệ phí ban đầu/phí đóng thêm theo năm đóng phí lần lượt là: từ năm thứ nhất đến năm thứ 4 là 2%, từ năm thứ 5 đến năm thứ 10 là 0%. Phí bảo hiểm rủi ro của hợp đồng là 260 nghìn đồng/tháng. Phí quản lý hợp đồng là 40 nghìn đồng/tháng (các khoản phí được khấu trừ vào ngày hiệu lực hợp đồng và ngày kỷ niệm tháng hợp đồng). Lãi suất đầu tư của quỹ liên kết chung được công ty công bố cho Quý 1 năm 2000 là 12%/năm. Giá trị tài khoản hợp đồng của chị C tại ngày 02/4/2000 là:",
         options: ["540 triệu đồng.", "700 triệu đồng.", "544,797 triệu đồng.", "637,66 triệu đồng."],
         answer: 2,
-        explain: "- Theo quy định pháp luật về sản phẩm liên kết chung (Thông tư 52/2012/TT-BTC, nay theo Thông tư 67/2023/TT-BTC), tổng phí đóng thêm trong một năm hợp đồng không vượt quá 5 lần phí bảo hiểm cơ bản. - Phí cơ bản = 100 triệu => Hạn mức phí đóng thêm tối đa trong năm 1 = 500 triệu đồng. - Ngày 28/02/2000 chị C đã đóng 500 triệu phí đóng thêm (đã đạt trần). Do đó khoản 100 triệu nộp ngày 01/3/2000 vượt quá giới hạn cho phép nên không được phân bổ vào Giá trị tài khoản hợp đồng (coi như phí treo/chờ xử lý). - Do đó, diễn biến GTTK vẫn giống như Câu 24, đạt 544,797 triệu đồng tại ngày 02/04/2000.*",
+        explain: "Do tổng phí đóng thêm trong năm hợp đồng không được vượt quá 5 lần phí bảo hiểm cơ bản năm (5 × 100 triệu = 500 triệu đồng), khoản phí đóng thêm 500 triệu đồng chị C đã đóng ngày 28/02/2000 đã đạt trần cho phép; do đó khoản 100 triệu đồng đóng thêm ngày 01/3/2000 vượt hạn mức và không được phân bổ vào giá trị tài khoản hợp đồng. Diễn biến giá trị tài khoản (GTTK) như sau: - Ngày 28/02/2000 (ngày hiệu lực hợp đồng): phí cơ bản 100 triệu trừ phí ban đầu năm 1 (50%) còn 50 triệu vào tài khoản; phí đóng thêm hợp lệ 500 triệu trừ phí ban đầu (2%) còn 490 triệu vào tài khoản; sau đó trừ phí bảo hiểm rủi ro và phí quản lý hợp đồng tháng đầu (0,26 + 0,04 triệu) => GTTK = 50 + 490 - 0,3 = 539,7 triệu đồng. - Ngày 28/3/2000 (ngày kỷ niệm tháng): GTTK được cộng lãi đầu tư 1 tháng theo lãi suất 12%/năm (~1%/tháng): 539,7 × 1,01 = 545,097 triệu đồng; sau đó trừ tiếp phí bảo hiểm rủi ro và phí quản lý hợp đồng tháng 2 (0,3 triệu) => GTTK = 545,097 - 0,3 = 544,797 triệu đồng. - Từ 28/3/2000 đến 02/4/2000 chưa đến ngày kỷ niệm tháng tiếp theo (28/4/2000) nên không phát sinh thêm giao dịch khấu trừ phí hay cộng lãi. Do đó, giá trị tài khoản hợp đồng tại ngày 02/4/2000 vẫn là 544,797 triệu đồng (đáp án C).",
       },
       {
         q: "Theo Luật Kinh doanh bảo hiểm, chọn phương án đúng khi bên mua bảo hiểm giao kết hợp đồng bảo hiểm nhân thọ cho trường hợp chết của người khác:",
