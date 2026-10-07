@@ -5266,7 +5266,7 @@ function renderListScreen(kind){
     dataset.forEach((item, idx)=>{
       html += renderFlatCard(item, idx, progress[item.id], kind);
     });
-    html += `<button class="logout-btn" id="btn_logout" title="Đăng xuất / Đăng ký lại" style="width:100%; margin-top:6px;">ĐĂNG XUẤT</button>`;
+    html += `<button class="btn" id="btn_logout" title="Đăng xuất / Đăng ký lại" style="margin-top:6px;">ĐĂNG XUẤT</button>`;
   }
 
   html += `<p class="cloud-note">☁️ Dữ liệu học tập đã được lưu an toàn trên thiết bị này</p>`;
