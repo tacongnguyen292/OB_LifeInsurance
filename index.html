@@ -4922,11 +4922,11 @@ function getProgress(){
   if(!p){
     p = {};
     TOPICS_DATA.forEach((t, idx)=>{
-      p[t.id] = { status: idx===0 ? "unlocked" : "locked", bestScore:0, attempts:0, sumScore:0 };
+      p[t.id] = { status: "unlocked", bestScore:0, attempts:0, sumScore:0 };
     });
     saveJSON(LS_PROGRESS, p);
   }
-  TOPICS_DATA.forEach((t,idx)=>{ if(!p[t.id]) p[t.id] = { status: idx===0?"unlocked":"locked", bestScore:0, attempts:0, sumScore:0 }; });
+  TOPICS_DATA.forEach((t,idx)=>{ if(!p[t.id]) p[t.id] = { status:"unlocked", bestScore:0, attempts:0, sumScore:0 }; });
   return p;
 }
 function setProgress(p){ saveJSON(LS_PROGRESS, p); }
@@ -5705,7 +5705,7 @@ function renderResultScreen(){
       <div class="result-ring ${r.passed?'pass':'fail'}" id="resultRing" style="--pct:0"><div class="inner">${r.correct}/${r.total}</div></div>
       <p class="result-title">${r.passed ? "🎉 Đạt yêu cầu!" : "Chưa đạt 80%"}</p>
       <span class="result-grade ${grade.cls}">${grade.label}</span>
-      <p class="result-sub">${pct}% chính xác ${r.timeUp?"· Hết giờ làm bài":""}${r.kind==='topic' && r.passed ? " · Chủ đề tiếp theo đã được mở khóa" : ""}</p>
+      <p class="result-sub">${pct}% chính xác ${r.timeUp?"· Hết giờ làm bài":""}</p>
       <div class="result-extra">
         ${r.kind!=="review" ? `<div>Attempt: <b>${r.attemptNumber}</b></div>` : ""}
         <div>Start Time: <b>${formatStartTime(r.startedAt)}</b></div>
